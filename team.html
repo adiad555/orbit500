@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+  <title>Team | OrbitSatellite</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+    
+    body {
+      background: #0a0e17;
+      color: #e0f7ff;
+      padding-bottom: 80px;
+      background-image: 
+        radial-gradient(circle at 20% 30%, rgba(0, 168, 255, 0.1) 0%, transparent 40%),
+        radial-gradient(circle at 80% 70%, rgba(100, 255, 218, 0.1) 0%, transparent 40%);
+    }
+
+    header {
+      background: linear-gradient(135deg, #0a0e17 0%, #1a283f 100%);
+      color: #64ffda;
+      padding: 20px 16px;
+      text-align: center;
+      font-size: 20px;
+      font-weight: 600;
+      position: relative;
+      border-bottom: 1px solid rgba(100, 255, 218, 0.2);
+    }
+
+    .logo-header {
+      height: 30px;
+      margin-bottom: 5px;
+    }
+
+    header::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: linear-gradient(90deg, #00a8ff 0%, #64ffda 100%);
+    }
+
+    .card {
+      background: rgba(18, 25, 40, 0.9);
+      margin: 16px;
+      padding: 16px;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      border-left: 4px solid #00a8ff;
+      border: 1px solid rgba(100, 255, 218, 0.1);
+    }
+
+    .card h2 {
+      color: #00a8ff;
+      font-size: 16px;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+    }
+
+    .card h2 i {
+      margin-right: 10px;
+      color: #64ffda;
+    }
+
+    .card ul {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .card li {
+      padding: 8px 0;
+      border-bottom: 1px solid rgba(100, 255, 218, 0.1);
+      font-size: 14px;
+      color: #e0f7ff;
+    }
+
+    .card li:last-child {
+      border-bottom: none;
+    }
+
+    .referral-box {
+      background: rgba(18, 25, 40, 0.9);
+      margin: 16px;
+      padding: 16px;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      border: 1px dashed #00a8ff;
+    }
+
+    .referral-box h3 {
+      color: #00a8ff;
+      font-size: 15px;
+      margin-bottom: 12px;
+    }
+
+    .referral-input {
+      position: relative;
+      margin-bottom: 12px;
+    }
+
+    .referral-input input {
+      width: 100%;
+      padding: 12px 40px 12px 12px;
+      border: 1px solid rgba(100, 255, 218, 0.3);
+      border-radius: 8px;
+      font-size: 14px;
+      background: rgba(10, 14, 23, 0.8);
+      color: #e0f7ff;
+    }
+
+    .copy-btn {
+      position: absolute;
+      right: 5px;
+      top: 5px;
+      background: #00a8ff;
+      color: #0a0e17;
+      border: none;
+      border-radius: 6px;
+      padding: 7px 10px;
+      font-size: 12px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    .copy-btn:hover {
+      background: #64ffda;
+    }
+
+    .komisi-summary {
+      display: flex;
+      justify-content: space-between;
+      margin: 16px;
+      gap: 12px;
+    }
+
+    .komisi-card {
+      flex: 1;
+      background: rgba(18, 25, 40, 0.9);
+      padding: 16px;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      border: 1px solid rgba(100, 255, 218, 0.1);
+    }
+
+    .komisi-card h3 {
+      color: #00a8ff;
+      font-size: 14px;
+      margin-bottom: 8px;
+    }
+
+    .komisi-card p {
+      font-size: 18px;
+      font-weight: 700;
+      color: #64ffda;
+    }
+
+    .komisi-card small {
+      display: block;
+      font-size: 12px;
+      color: #a0aec0;
+      margin-top: 4px;
+    }
+
+    .level-card {
+      background: rgba(18, 25, 40, 0.9);
+      margin: 16px;
+      padding: 16px;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+      border: 1px solid rgba(100, 255, 218, 0.1);
+    }
+
+    .level-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(100, 255, 218, 0.15);
+    }
+
+    .level-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .level-title {
+      color: #00a8ff;
+      font-size: 15px;
+      font-weight: 600;
+    }
+
+    .level-percent {
+      background: #64ffda;
+      color: #0a0e17;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .view-all-btn {
+      background: #64ffda;
+      color: #0a0e17;
+      border: none;
+      border-radius: 6px;
+      padding: 8px 12px;
+      font-size: 13px;
+      cursor: pointer;
+      width: 100%;
+      text-align: center;
+      font-weight: 600;
+    }
+
+    .member-list {
+      list-style: none;
+      padding-left: 0;
+      margin-top: 12px;
+      display: none;
+      max-height: 300px;
+      overflow-y: auto;
+    }
+
+    .member-list li {
+      padding: 10px;
+      border-bottom: 1px solid rgba(100, 255, 218, 0.1);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .member-list li:last-child {
+      border-bottom: none;
+    }
+
+    .member-info {
+      font-size: 14px;
+      color: #e0f7ff;
+    }
+
+    .member-amount {
+      font-weight: 600;
+      color: #64ffda;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 20px;
+      color: #a0aec0;
+      font-size: 14px;
+    }
+
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 70px;
+      background: rgba(18, 25, 40, 0.95);
+      border-top: 1px solid rgba(100, 255, 218, 0.2);
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      z-index: 999;
+      box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+      backdrop-filter: blur(10px);
+    }
+
+    .bottom-nav a {
+      text-decoration: none;
+      color: #a0aec0;
+      font-size: 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      flex: 1;
+      padding: 8px 0;
+      transition: all 0.3s;
+    }
+
+    .bottom-nav a.active {
+      color: #64ffda;
+      font-weight: 600;
+    }
+
+    .bottom-nav i {
+      font-size: 22px;
+      margin-bottom: 4px;
+    }
+
+    .bottom-nav a.active i {
+      color: #64ffda;
+    }
+    .orbit-bg {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      opacity: 0.1;
+      background: 
+        radial-gradient(circle at 20% 30%, #00a8ff 0%, transparent 40%),
+        radial-gradient(circle at 80% 70%, #64ffda 0%, transparent 40%);
+    }
+  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+
+<div class="orbit-bg"></div>
+
+  <header>
+    <div>ORBIT SATELLITE</div>
+    <div>TEAM & KOMISI</div>
+  </header>
+
+  <div class="card">
+    <h2><i class="fas fa-info-circle"></i> Sistem Komisi Referral</h2>
+    <ul>
+      <li>Level 1: anda akan mendapatkan komisi 25% </li>
+      <li>Level 2: anda akan mendapatkan komisi 2%</li>
+      <li>Level 3: anda akan mendapatkan komisi 1%</li>
+      <li>Semakim banyak team bergabung dengan tautan anda, anda akan mendapatkan banyak keuntungan </li>
+    </ul>
+  </div>
+
+  <div class="referral-box">
+    <h3><i class="fas fa-share-alt"></i> Tautan Referral Anda</h3>
+    <div class="referral-input">
+      <input type="text" id="refLink" readonly />
+      <button class="copy-btn" onclick="copyLink()">Salin</button>
+    </div>
+    <p style="font-size: 12px; color: #a0aec0;">Bagikan tautan ini untuk mendapatkan komisi</p>
+  </div>
+
+  <div class="komisi-summary">
+    <div class="komisi-card">
+      <h3>Total Komisi</h3>
+      <p id="totalKomisi">Rp0</p>
+      <small>Seluruh level</small>
+    </div>
+    <div class="komisi-card">
+      <h3>Referral Aktif</h3>
+      <p id="totalReferral">0</p>
+      <small>Total anggota team</small>
+    </div>
+  </div>
+
+  <div class="level-card">
+    <div class="level-header">
+      <div class="level-title">Level 1</div>
+      <div class="level-percent">25% Komisi</div>
+    </div>
+    <button class="view-all-btn" onclick="window.location.href='referral_detail.html?level=1'">
+      <i class="fas fa-eye"></i> Lihat Semua
+    </button>
+    <ul class="member-list" id="lvl1"></ul>
+  </div>
+
+  <div class="level-card">
+    <div class="level-header">
+      <div class="level-title">Level 2</div>
+      <div class="level-percent">2% Komisi</div>
+    </div>
+    <button class="view-all-btn" onclick="window.location.href='referral_detail.html?level=2'">
+      <i class="fas fa-eye"></i> Lihat Semua
+    </button>
+    <ul class="member-list" id="lvl2"></ul>
+  </div>
+
+  <div class="level-card">
+    <div class="level-header">
+      <div class="level-title">Level 3</div>
+      <div class="level-percent">1% Komisi</div>
+    </div>
+    <button class="view-all-btn" onclick="window.location.href='referral_detail.html?level=3'">
+      <i class="fas fa-eye"></i> Lihat Semua
+    </button>
+    <ul class="member-list" id="lvl3"></ul>
+  </div>
+
+  <div class="bottom-nav">
+    <a href="dashboard.html"><i class="fas fa-home"></i>Home</a>
+    <a href="produk.html"><i class="fas fa-shopping-bag"></i>Produk</a>
+    <a href="riwayat.html"><i class="fas fa-history"></i>Riwayat</a>
+    <a href="team.html" class="active"><i class="fas fa-users"></i>Team</a>
+    <a href="profil.html"><i class="fas fa-user"></i>Profil</a>
+  </div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAuJSxpcFZ1QI-dEsEnx2qSqlb0wsvs6Mc",
+  authDomain: "lginvest-776cf.firebaseapp.com",
+  databaseURL: "https://lginvest-776cf-default-rtdb.firebaseio.com",
+  projectId: "lginvest-776cf",
+  storageBucket: "lginvest-776cf.firebasestorage.app",
+  messagingSenderId: "831934282072",
+  appId: "1:831934282072:web:6a8b7a5bcba5d4d1264d2d",
+  measurementId: "G-265YF9DYCF"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
+// Pengecekan session
+const nohp = localStorage.getItem("nohp") || sessionStorage.getItem("nohp");
+if (!nohp || nohp === "null" || nohp === "undefined") {
+  alert("Sesi telah habis, silakan login kembali");
+  window.location.href = "index.html";
+}
+
+// Inisialisasi tautan referral
+async function initReferralLink() {
+  const snapshot = await get(ref(db, "users/" + nohp));
+  const user = snapshot.val();
+  if (!user || !user.referral) {
+    document.getElementById("refLink").value = "Belum ada kode referral";
+    return;
+  }
+  const link = `${window.location.origin}/register?ref=${user.referral}`;
+  document.getElementById("refLink").value = link;
+  window.copyLink = () => {
+    navigator.clipboard.writeText(link).then(() => {
+      alert("Tautan referral berhasil disalin!");
+    }).catch(() => alert("Gagal menyalin tautan"));
+  };
+}
+
+// Hitung komisi
+function calculateKomisi(amount, level) {
+  let persen = level === 1 ? 25 : level === 2 ? 2 : 1;
+  return ((amount || 0) * persen / 100);
+}
+function formatCurrency(amount) {
+  return "Rp" + Number(amount).toLocaleString("id-ID");
+}
+
+// Memuat data team, menghitung total, dan menampilkan list anggota per level
+async function calculateTotals() {
+  const snapshot = await get(ref(db, "users"));
+  const users = snapshot.val();
+  if (!users) return;
+
+  const myRef = users[nohp]?.referral;
+  if (!myRef) return;
+
+  let totalKomisi = 0;
+  let totalReferral = 0;
+
+  // Tempat list anggota tiap level
+  let lvl1HTML = "", lvl2HTML = "", lvl3HTML = "";
+
+  for (let key in users) {
+    const user = users[key];
+    const upline1 = user.upline;
+    const upline2 = upline1 ? users[upline1]?.upline : null;
+    const upline3 = upline2 ? users[upline2]?.upline : null;
+
+    const ref1 = upline1 ? users[upline1]?.referral : null;
+    const ref2 = upline2 ? users[upline2]?.referral : null;
+    const ref3 = upline3 ? users[upline3]?.referral : null;
+
+    // LEVEL 1
+    if (ref1 === myRef) {
+      totalKomisi += calculateKomisi(user.first_product || 0, 1);
+      totalReferral++;
+      lvl1HTML += `<li><span class="member-info">${user.nama || key}</span><span class="member-amount">${formatCurrency(user.first_product || 0)}</span></li>`;
+    }
+    // LEVEL 2
+    else if (ref2 === myRef) {
+      totalKomisi += calculateKomisi(user.first_product || 0, 2);
+      totalReferral++;
+      lvl2HTML += `<li><span class="member-info">${user.nama || key}</span><span class="member-amount">${formatCurrency(user.first_product || 0)}</span></li>`;
+    }
+    // LEVEL 3
+    else if (ref3 === myRef) {
+      totalKomisi += calculateKomisi(user.first_product || 0, 3);
+      totalReferral++;
+      lvl3HTML += `<li><span class="member-info">${user.nama || key}</span><span class="member-amount">${formatCurrency(user.first_product || 0)}</span></li>`;
+    }
+  }
+
+  // Update total
+  document.getElementById("totalKomisi").textContent = formatCurrency(totalKomisi);
+  document.getElementById("totalReferral").textContent = totalReferral;
+
+  // Tampilkan anggota di list
+  document.getElementById("lvl1").innerHTML = lvl1HTML || `<li class="empty-state">Belum ada anggota level 1</li>`;
+  document.getElementById("lvl2").innerHTML = lvl2HTML || `<li class="empty-state">Belum ada anggota level 2</li>`;
+  document.getElementById("lvl3").innerHTML = lvl3HTML || `<li class="empty-state">Belum ada anggota level 3</li>`;
+}
+
+// Jalankan fungsi
+initReferralLink();
+calculateTotals();
+</script>
+</body>
+</html>

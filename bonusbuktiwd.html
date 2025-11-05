@@ -1,0 +1,117 @@
+// auth.js
+import app from "./firebase-config.js";
+import {
+  getAuth,
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword
+} from "firebase/auth";
+import {
+  getDatabase,
+  ref,
+  set,
+  get,
+  child,
+  update
+} from "firebase/database";
+
+const auth = getAuth(app);
+const db = getDatabase(app);
+
+// Generate kode undangan unik 7-8 digit
+function generateKodeUndangan() {
+  return Math.floor(1000000 + Math.random() * 9000000).toString();
+}
+
+// Fungsi untuk menyensor sebagian nomor HP
+function sensorNomor(nomor) {
+  return nomor.substring(0, 4) + "****" + nomor.substring(nomor.length - 3);
+}
+
+// Fungsi Registrasi
+export async function registerUser(nomorHP, password, kodeReferral = null) {
+  const email = `${nomorHP}@orbit.com`; // triknya pakai email
+  const kodeUndangan = generateKodeUndangan();
+  const username = "user" + nomorHP.slice(-4);
+
+  const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+  const uid = userCredential.user.uid;
+
+  // Simpan data user
+  await set(ref(db, 'users/' + uid), {
+    uid,
+    nomorHP,
+    password,
+    username,
+    kodeUndangan,
+    kodeReferral: kodeReferral || null,
+    createdAt: Date.now(),
+    level: 0,
+    totalInvestasi: 0,
+    profit: 0,
+    komisi: 0,
+    referral: {
+      level1: {},
+      level2: {},
+      level3: {}
+    }
+  });
+
+  // Proses referral jika ada
+  if (kodeReferral) {
+    const snapshot = await get(child(ref(db), 'users'));
+    if (snapshot.exists()) {
+      const users = snapshot.val();
+      let found = null;
+      for (const id in users) {
+        if (users[id].kodeUndangan === kodeReferral) {
+          found = { uid: id, data: users[id] };
+          break;
+        }
+      }
+
+      if (found) {
+        // Tambahkan ke level1 referral
+        const ref1 = ref(db, `users/${found.uid}/referral/level1/${uid}`);
+        await set(ref1, {
+          nomorHP: sensorNomor(nomorHP),
+          waktu: Date.now()
+        });
+
+        // Cari level 2 dan 3 berdasarkan parent
+        if (found.data.kodeReferral) {
+          for (const id2 in users) {
+            if (users[id2].kodeUndangan === found.data.kodeReferral) {
+              // level2
+              const ref2 = ref(db, `users/${id2}/referral/level2/${uid}`);
+              await set(ref2, {
+                nomorHP: sensorNomor(nomorHP),
+                waktu: Date.now()
+              });
+
+              if (users[id2].kodeReferral) {
+                for (const id3 in users) {
+                  if (users[id3].kodeUndangan === users[id2].kodeReferral) {
+                    // level3
+                    const ref3 = ref(db, `users/${id3}/referral/level3/${uid}`);
+                    await set(ref3, {
+                      nomorHP: sensorNomor(nomorHP),
+                      waktu: Date.now()
+                    });
+                    break;
+                  }
+                }
+              }
+              break;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+// Fungsi Login
+export async function loginUser(nomorHP, password) {
+  const email = `${nomorHP}@orbit.com`;
+  await signInWithEmailAndPassword(auth, email, password);
+}

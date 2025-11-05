@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+  <title>Penarikan Dana | OrbitSatellite</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+    body {
+      background: #0a0e17;
+      color: #e0f7ff;
+      overflow-x: hidden;
+      padding-bottom: 80px;
+      background-image: 
+        radial-gradient(circle at 20% 30%, rgba(0, 168, 255, 0.1) 0%, transparent 40%),
+        radial-gradient(circle at 80% 70%, rgba(100, 255, 218, 0.1) 0%, transparent 40%);
+    }
+    header {
+      background: linear-gradient(135deg, #0a0e17 0%, #1a283f 100%);
+      color: #64ffda;
+      padding: 20px 16px;
+      text-align: center;
+      font-size: 20px;
+      font-weight: 600;
+      letter-spacing: .5px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+      position: relative;
+      border-bottom: 1px solid rgba(100, 255, 218, 0.2);
+    }
+    header::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: linear-gradient(90deg, #00a8ff 0%, #64ffda 100%);
+    }
+    .container {
+      background: rgba(18, 25, 40, 0.9);
+      margin: 20px 16px;
+      padding: 20px;
+      border-radius: 16px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      border: 1px solid rgba(100, 255, 218, 0.1);
+    }
+    h2 {
+      text-align: center;
+      color: #64ffda;
+      margin-bottom: 20px;
+      font-size: 18px;
+    }
+    label {
+      font-weight: 500;
+      font-size: 14px;
+      display: block;
+      margin-bottom: 8px;
+      color: #00a8ff;
+    }
+    input, select {
+      width: 100%;
+      padding: 12px 15px;
+      font-size: 14px;
+      margin-bottom: 20px;
+      border-radius: 8px;
+      border: 1px solid rgba(100, 255, 218, 0.2);
+      background: rgba(10, 14, 23, 0.8);
+      color: #e0f7ff;
+    }
+    input:focus, select:focus {
+      outline: none;
+      border-color: #00a8ff;
+      box-shadow: 0 0 0 2px rgba(0, 168, 255, 0.2);
+    }
+    button {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, #00a8ff 0%, #64ffda 100%);
+      color: #0a0e17;
+      font-weight: 600;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+      margin-top: 10px;
+      transition: all 0.3s;
+    }
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+    button:disabled {
+      background: #4a5568;
+      color: #a0aec0;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+    .info-box {
+      background: rgba(0, 168, 255, 0.1);
+      padding: 15px;
+      border-radius: 8px;
+      margin-top: 20px;
+      border-left: 3px solid #00a8ff;
+    }
+    .info-box p {
+      font-size: 13px;
+      color: #64ffda;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+    }
+    .info-box p i {
+      margin-right: 8px;
+      color: #00a8ff;
+    }
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 70px;
+      background: rgba(18, 25, 40, 0.95);
+      border-top: 1px solid rgba(100, 255, 218, 0.2);
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      z-index: 999;
+      box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+      backdrop-filter: blur(10px);
+    }
+    .bottom-nav a {
+      text-decoration: none;
+      color: #a0aec0;
+      font-size: 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      flex: 1;
+      padding: 8px 0;
+      transition: .3s;
+    }
+    .bottom-nav a.active {
+      color: #64ffda;
+      font-weight: 600;
+    }
+    .bottom-nav i {
+      font-size: 22px;
+      margin-bottom: 4px;
+    }
+    .bottom-nav a.active i {
+      color: #64ffda;
+    }
+    .bank-button {
+      display: block;
+      width: 100%;
+      background: linear-gradient(135deg, #00a8ff 0%, #64ffda 100%);
+      color: #0a0e17;
+      border: none;
+      padding: 12px;
+      border-radius: 8px;
+      font-weight: 600;
+      margin-top: 15px;
+      cursor: pointer;
+      text-align: center;
+      text-decoration: none;
+      transition: .3s;
+    }
+    .bank-button:hover {
+      opacity: .9;
+      transform: translateY(-2px);
+    }
+    #popupMsg {
+      visibility: hidden;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0.8);
+      background: #cc0000;
+      color: white;
+      padding: 20px 25px;
+      border-radius: 12px;
+      text-align: center;
+      max-width: 300px;
+      z-index: 10000;
+      font-weight: 600;
+      font-size: 15px;
+      opacity: 0;
+      transition: all 0.3s ease-in-out;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    }
+    #popupMsg.success {
+      background: #00aa66;
+    }
+    #popupMsg.show {
+      visibility: visible;
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1);
+    }
+  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+
+<header>
+  <div>ORBIT SATELLITE</div>
+  <div>PENARIKAN DANA</div>
+</header>
+
+<div class="container">
+  <h2>FORMULIR PENARIKAN</h2>
+  <form id="withdrawForm">
+    <label>Jumlah Penarikan</label>
+    <input type="text" id="jumlah" placeholder="Minimal Rp20.000" required />
+    
+    <label>Rekening Tersimpan</label>
+    <select id="rekeningSelect" required></select>
+    
+    <button type="submit" id="submitBtn">AJUKAN PENARIKAN</button>
+    
+    <a href="rekening.html" class="bank-button">
+      <i class="fas fa-university"></i> Kelola Rekening Bank
+    </a>
+
+    <div class="info-box">
+      <p><i class="fas fa-info-circle"></i> Proses penarikan 1x24 jam</p>
+      <p><i class="fas fa-calendar-day"></i> Penarikan dapat dilakukan 24 jam nonstop</p>
+      <p><i class="fas fa-wallet"></i> Minimal penarikan Rp20.000</p>
+      <p><i class="fas fa-clock"></i> Penarikan tersedia setiap saat</p>
+      <p><i class="fas fa-percentage"></i> Potongan penarikan 6%</p>
+    </div>
+  </form>
+</div>
+
+<div class="bottom-nav">
+  <a href="dashboard.html"><i class="fas fa-home"></i>Home</a>
+  <a href="produk.html"><i class="fas fa-shopping-bag"></i>Produk</a>
+  <a href="riwayat.html"><i class="fas fa-history"></i>Riwayat</a>
+  <a href="team.html"><i class="fas fa-users"></i>Team</a>
+  <a href="profil.html" class="active"><i class="fas fa-user"></i>Profil</a>
+</div>
+
+<div id="popupMsg"></div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+import { getDatabase, ref, get, push, update } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAuJSxpcFZ1QI-dEsEnx2qSqlb0wsvs6Mc",
+  authDomain: "lginvest-776cf.firebaseapp.com",
+  databaseURL: "https://lginvest-776cf-default-rtdb.firebaseio.com",
+  projectId: "lginvest-776cf",
+  storageBucket: "lginvest-776cf.firebasestorage.app",
+  messagingSenderId: "831934282072",
+  appId: "1:831934282072:web:6a8b7a5bcba5d4d1264d2d",
+  measurementId: "G-265YF9DYCF"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+const nohp = localStorage.getItem("nohp") || sessionStorage.getItem("nohp");
+
+if (!nohp) {
+  showMsg("Sesi habis, login ulang!", "error");
+  setTimeout(() => location.href = "index.html", 1500);
+}
+
+// ✅ Fungsi Popup
+function showMsg(msg, type = "info") {
+  const pop = document.getElementById("popupMsg");
+  pop.className = "";
+  pop.innerText = msg;
+  pop.classList.add("show", type);
+  setTimeout(() => pop.classList.remove("show"), 2500);
+}
+
+// Load rekening user
+const rekeningSelect = document.getElementById("rekeningSelect");
+get(ref(db, "rekening/" + nohp)).then(snap => {
+  if (snap.exists()) {
+    const r = snap.val();
+    rekeningSelect.innerHTML = `<option value="${r.bank}|${r.nama}|${r.norek}">${r.bank} - ${r.nama} (${r.norek})</option>`;
+  } else {
+    rekeningSelect.innerHTML = `<option value="">Belum ada rekening tersimpan</option>`;
+  }
+});
+
+// Cek produk aktif user
+const btn = document.getElementById("submitBtn");
+get(ref(db, "produk_aktif/" + nohp)).then(s => {
+  if (!s.exists() || Object.keys(s.val()).length === 0) {
+    btn.disabled = true;
+    btn.innerText = "BELUM MEMILIKI PRODUK";
+    showMsg("Anda harus memiliki produk aktif untuk menarik dana");
+  }
+});
+
+// Format rupiah
+document.getElementById("jumlah").addEventListener("input", e => {
+  const v = e.target.value.replace(/\D/g, "");
+  e.target.value = v.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+});
+
+// Submit penarikan
+document.getElementById("withdrawForm").addEventListener("submit", async e => {
+  e.preventDefault();
+  
+  const jumlah = parseInt(document.getElementById("jumlah").value.replace(/\./g, ""));
+  if (jumlah < 20000) {
+    showMsg("Minimal penarikan Rp20.000", "error");
+    return;
+  }
+
+  const rekVal = rekeningSelect.value;
+  if (!rekVal) {
+    showMsg("Tidak ada rekening tersimpan", "error");
+    return;
+  }
+  const [metode, nama, rekening] = rekVal.split("|");
+
+  btn.disabled = true;
+  btn.innerText = "MEMPROSES...";
+  
+  const pot = Math.floor(jumlah * 0.06); // Potongan 6%
+  const total = jumlah - pot;
+
+  const userRef = ref(db, "users/" + nohp);
+  const s = await get(userRef);
+  if (!s.exists()) {
+    showMsg("Akun tidak ditemukan", "error");
+    btn.disabled = false;
+    btn.innerText = "AJUKAN PENARIKAN";
+    return;
+  }
+  
+  const saldo = s.val().saldo || 0;
+  if (saldo < jumlah) {
+    showMsg("Saldo tidak mencukupi", "error");
+    btn.disabled = false;
+    btn.innerText = "AJUKAN PENARIKAN";
+    return;
+  }
+
+  // Cek apakah user memiliki produk aktif
+  const produkAktifRef = ref(db, "produk_aktif/" + nohp);
+  const produkAktifSnap = await get(produkAktifRef);
+  
+  if (!produkAktifSnap.exists() || Object.keys(produkAktifSnap.val()).length === 0) {
+    showMsg("Anda harus memiliki produk aktif untuk menarik dana", "error");
+    btn.disabled = false;
+    btn.innerText = "AJUKAN PENARIKAN";
+    return;
+  }
+
+  // Kurangi saldo user
+  await update(userRef, { saldo: saldo - jumlah });
+  
+  // Catat penarikan
+  const now = new Date();
+  await push(ref(db, "transaksi/penarikan/" + nohp), {
+    nohp,
+    jumlah,
+    metode,
+    nama,
+    rekening,
+    potongan: pot,
+    total_terima: total,
+    status: "pending",
+    waktu: now.toISOString()
+  });
+
+  // Catat di riwayat transaksi
+  await push(ref(db, "riwayat_transaksi/" + nohp), {
+    jenis: "penarikan",
+    jumlah: -jumlah,
+    saldo_akhir: saldo - jumlah,
+    keterangan: `Penarikan ke ${metode} - ${rekening}`,
+    waktu: now.toISOString()
+  });
+
+  showMsg("Penarikan berhasil diajukan! Dana akan diproses dalam 1x24 jam", "success");
+  setTimeout(() => location.href = "dashboard.html", 2000);
+});
+</script>
+</body>
+</html>

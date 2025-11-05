@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Produk | OrbitSatellite</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+    body {
+      background: #0a0e17;
+      color: #e0f7ff;
+      overflow-x: hidden;
+      padding-bottom: 80px;
+      background-image: 
+        radial-gradient(circle at 20% 30%, rgba(0, 168, 255, 0.1) 0%, transparent 40%),
+        radial-gradient(circle at 80% 70%, rgba(100, 255, 218, 0.1) 0%, transparent 40%);
+    }
+    header {
+      background: linear-gradient(135deg, #0a0e17 0%, #1a283f 100%);
+      color: #64ffda;
+      padding: 20px 16px;
+      text-align: center;
+      font-size: 20px;
+      font-weight: 600;
+      letter-spacing: .5px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+      position: relative;
+      border-bottom: 1px solid rgba(100, 255, 218, 0.2);
+    }
+    header::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: linear-gradient(90deg, #00a8ff 0%, #64ffda 100%);
+    }
+    .produk-container {
+      margin: 20px 16px;
+    }
+    .produk-card {
+      background: rgba(18, 25, 40, 0.9);
+      border-radius: 16px;
+      overflow: hidden;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      border: 1px solid rgba(100, 255, 218, 0.1);
+    }
+    .produk-header {
+      background: linear-gradient(135deg, #00a8ff 0%, #64ffda 100%);
+      color: #0a0e17;
+      padding: 15px;
+      position: relative;
+      overflow: hidden;
+    }
+    .produk-header h3 {
+      margin: 0;
+      font-size: 18px;
+      font-weight: 600;
+    }
+    .produk-header .badge {
+      position: absolute;
+      right: 15px;
+      top: 15px;
+      background: #0a0e17;
+      color: #64ffda;
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 700;
+    }
+    .produk-content {
+      padding: 15px;
+      display: flex;
+    }
+    .produk-image {
+      width: 100px;
+      height: 100px;
+      border-radius: 10px;
+      object-fit: cover;
+      margin-right: 15px;
+      border: 2px solid rgba(100, 255, 218, 0.2);
+    }
+    .produk-details {
+      flex: 1;
+    }
+    .produk-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 8px;
+      font-size: 14px;
+    }
+    .produk-label {
+      color: #a0aec0;
+      font-weight: 500;
+    }
+    .produk-value {
+      color: #64ffda;
+      font-weight: 600;
+    }
+    .produk-button {
+      display: block;
+      width: 100%;
+      background: linear-gradient(135deg, #00a8ff 0%, #64ffda 100%);
+      color: #0a0e17;
+      border: none;
+      padding: 12px;
+      border-radius: 8px;
+      font-weight: 600;
+      margin-top: 10px;
+      cursor: pointer;
+      transition: .3s;
+    }
+    .produk-button:hover {
+      opacity: .9;
+      transform: translateY(-2px);
+    }
+    .produk-button:disabled {
+      background: #4a5568;
+      cursor: not-allowed;
+    }
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 70px;
+      background: rgba(18, 25, 40, 0.95);
+      border-top: 1px solid rgba(100, 255, 218, 0.2);
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      z-index: 999;
+      box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+      backdrop-filter: blur(10px);
+    }
+    .bottom-nav a {
+      text-decoration: none;
+      color: #a0aec0;
+      font-size: 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      flex: 1;
+      padding: 8px 0;
+      transition: .3s;
+    }
+    .bottom-nav a.active {
+      color: #64ffda;
+      font-weight: 600;
+    }
+    .bottom-nav i {
+      font-size: 22px;
+      margin-bottom: 4px;
+    }
+    .bottom-nav a.active i {
+      color: #64ffda;
+    }
+    .button-container {
+      display: flex;
+      gap: 10px;
+      margin: 10px 16px;
+    }
+    .custom-button {
+      flex: 1;
+      background: #0a0e17;
+      color: #64ffda;
+      border: 1px solid rgba(100, 255, 218, 0.3);
+      padding: 10px;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      text-align: center;
+    }
+
+    /* ✅ Popup Merah Elegan di Tengah */
+    #popupMsg {
+      visibility: hidden;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0.8);
+      background: #cc0000;
+      color: white;
+      padding: 20px 25px;
+      border-radius: 12px;
+      text-align: center;
+      max-width: 300px;
+      z-index: 10000;
+      font-weight: 600;
+      font-size: 15px;
+      opacity: 0;
+      transition: all 0.3s ease-in-out;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    }
+    #popupMsg.success {
+      background: #00aa66;
+    }
+    #popupMsg.show {
+      visibility: visible;
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1);
+    }
+    .orbit-bg {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      opacity: 0.1;
+      background: 
+        radial-gradient(circle at 20% 30%, #00a8ff 0%, transparent 40%),
+        radial-gradient(circle at 80% 70%, #64ffda 0%, transparent 40%);
+    }
+    .produk-limit {
+      font-size: 12px;
+      color: #ffcc00;
+      margin-top: 5px;
+    }
+    .profit-info {
+      font-size: 12px;
+      color: #00a8ff;
+      margin-top: 5px;
+      font-style: italic;
+    }
+    .requirement-info {
+      font-size: 12px;
+      color: #ff6b6b;
+      margin-top: 5px;
+      font-style: italic;
+    }
+  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+
+<div class="orbit-bg"></div>
+
+<header>
+  <div>ORBIT SATELLITE</div>
+  <div>PRODUK INVESTASI</div>
+</header>
+
+<div class="button-container">
+  <button id="toggleBaru" class="custom-button">🔄 Lihat Semua Produk</button>
+  <button id="extraBonus" class="custom-button">🎁 Extra Bonus</button>
+</div>
+
+<div class="produk-container" id="list-produk"></div>
+
+<!-- ✅ Popup Notifikasi -->
+<div id="popupMsg"></div>
+
+<div class="bottom-nav">
+  <a href="dashboard.html"><i class="fas fa-home"></i>Home</a>
+  <a href="produk.html" class="active"><i class="fas fa-shopping-bag"></i>Produk</a>
+  <a href="riwayat.html"><i class="fas fa-history"></i>Riwayat</a>
+  <a href="team.html"><i class="fas fa-users"></i>Team</a>
+  <a href="profil.html"><i class="fas fa-user"></i>Profil</a>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+import { getDatabase, ref, get, set, push, update, onValue } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAuJSxpcFZ1QI-dEsEnx2qSqlb0wsvs6Mc",
+  authDomain: "lginvest-776cf.firebaseapp.com",
+  databaseURL: "https://lginvest-776cf-default-rtdb.firebaseio.com",
+  projectId: "lginvest-776cf",
+  storageBucket: "lginvest-776cf.firebasestorage.app",
+  messagingSenderId: "831934282072",
+  appId: "1:831934282072:web:6a8b7a5bcba5d4d1264d2d",
+  measurementId: "G-265YF9DYCF"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+const nohp = localStorage.getItem("nohp") || sessionStorage.getItem("nohp");
+if (!nohp) {
+  showMsg("Sesi habis, login ulang!", "error");
+  setTimeout(() => location.href = "index.html", 1500);
+}
+
+// ✅ Fungsi Popup
+function showMsg(msg, type = "info") {
+  const pop = document.getElementById("popupMsg");
+  pop.className = "";
+  pop.innerText = msg;
+  pop.classList.add("show", type);
+  setTimeout(() => pop.classList.remove("show"), 2500);
+}
+
+// ✅ Daftar Produk Baru dengan sistem profit 10-20%
+const produkList = [
+  { 
+    nama: "Orbit Nano", 
+    harga: 50000, 
+    profit_percent: 14, // Diubah dari 10% menjadi 14% untuk menghasilkan 7rb/hari
+    profit_per_hari: 7000, // Diubah dari 5000 menjadi 7000
+    kontrak: 7, 
+    max_beli: 1,
+    image: "https://images.unsplash.com/photo-1446776653964-20c1d3a81b06?w=400&h=400&fit=crop",
+    deskripsi: "Modal kembali setelah kontrak",
+    require_minimal_purchase: 100000 // Minimal harus pernah beli produk 100rb
+  },
+  { 
+    nama: "Orbit Mini", 
+    harga: 100000, 
+    profit_percent: 10.5,
+    profit_per_hari: 10500,
+    kontrak: 25, 
+    max_beli: 2,
+    image: "https://images.unsplash.com/photo-1462331940025-496dfbfc7564?w=400&h=400&fit=crop",
+    deskripsi: "Modal kembali setelah kontrak"
+  },
+  { 
+    nama: "Orbit Basic", 
+    harga: 150000, 
+    profit_percent: 11,
+    profit_per_hari: 16500,
+    kontrak: 25, 
+    max_beli: 2,
+    image: "https://images.unsplash.com/photo-1465101162946-4377e57745c3?w=400&h=400&fit=crop",
+    deskripsi: "Modal kembali setelah kontrak"
+  },
+  { 
+    nama: "Orbit Standard", 
+    harga: 200000, 
+    profit_percent: 12,
+    profit_per_hari: 24000,
+    kontrak: 25, 
+    max_beli: 2,
+    image: "https://images.unsplash.com/photo-1502136969935-8d8eef54d77b?w=400&h=400&fit=crop",
+    deskripsi: "Modal kembali setelah kontrak"
+  },
+  { 
+    nama: "Orbit Plus", 
+    harga: 300000, 
+    profit_percent: 13,
+    profit_per_hari: 39000,
+    kontrak: 25, 
+    max_beli: 2,
+    image: "https://images.unsplash.com/photo-1464802686167-b939a6910659?w=400&h=400&fit=crop",
+    deskripsi: "Modal kembali setelah kontrak"
+  },
+  { 
+    nama: "Orbit Pro", 
+    harga: 400000, 
+    profit_percent: 14,
+    profit_per_hari: 56000,
+    kontrak: 25, 
+    max_beli: 2,
+    image: "https://images.unsplash.com/photo-1505506874110-6a7a69069a08?w=400&h=400&fit=crop",
+    deskripsi: "Modal kembali setelah kontrak"
+  },
+  { 
+    nama: "Orbit Advanced", 
+    harga: 500000, 
+    profit_percent: 15,
+    profit_per_hari: 75000,
+    kontrak: 25, 
+    max_beli: 2,
+    image: "https://images.unsplash.com/photo-1543722530-d2c3201371e7?w=400&h=400&fit=crop",
+    deskripsi: "Modal kembali setelah kontrak"
+  },
+  { 
+    nama: "Orbit Premium", 
+    harga: 750000, 
+    profit_percent: 16,
+    profit_per_hari: 120000,
+    kontrak: 25, 
+    max_beli: 2,
+    image: "https://images.unsplash.com/photo-1462331940025-496dfbfc7564?w=400&h=400&fit=crop",
+    deskripsi: "Modal kembali setelah kontrak"
+  },
+  { 
+    nama: "Orbit Elite", 
+    harga: 1000000, 
+    profit_percent: 17,
+    profit_per_hari: 170000,
+    kontrak: 25, 
+    max_beli: 2,
+    image: "https://images.unsplash.com/photo-1446776877081-d282a0f896e2?w=400&h=400&fit=crop",
+    deskripsi: "Modal kembali setelah kontrak"
+  },
+  { 
+    nama: "Orbit Supreme", 
+    harga: 1500000, 
+    profit_percent: 18,
+    profit_per_hari: 270000,
+    kontrak: 25, 
+    max_beli: 2,
+    image: "https://images.unsplash.com/photo-1462331940025-496dfbfc7564?w=400&h=400&fit=crop",
+    deskripsi: "Modal kembali setelah kontrak"
+  },
+  { 
+    nama: "Orbit Galaxy", 
+    harga: 2000000, 
+    profit_percent: 19,
+    profit_per_hari: 380000,
+    kontrak: 25, 
+    max_beli: 2,
+    image: "https://images.unsplash.com/photo-1502136969935-8d8eef54d77b?w=400&h=400&fit=crop",
+    deskripsi: "Modal kembali setelah kontrak"
+  },
+  { 
+    nama: "Orbit Universe", 
+    harga: 2500000, 
+    profit_percent: 20,
+    profit_per_hari: 500000,
+    kontrak: 25, 
+    max_beli: 2,
+    image: "https://images.unsplash.com/photo-1465101162946-4377e57745c3?w=400&h=400&fit=crop",
+    deskripsi: "Modal kembali setelah kontrak"
+  }
+];
+
+const listEl = document.getElementById("list-produk");
+
+// ✅ Fungsi untuk menghitung jumlah pembelian produk oleh user
+async function getJumlahPembelian(namaProduk) {
+  const snap = await get(ref(db, "produk_aktif/" + nohp));
+  if (!snap.exists()) return 0;
+  
+  const produkAktif = Object.values(snap.val());
+  return produkAktif.filter(p => p.nama === namaProduk).length;
+}
+
+// ✅ Fungsi untuk mengecek apakah user pernah membeli produk minimal 100rb
+async function hasPurchasedMinimal100k() {
+  // Cek produk aktif
+  const snapAktif = await get(ref(db, "produk_aktif/" + nohp));
+  if (snapAktif.exists()) {
+    const produkAktif = Object.values(snapAktif.val());
+    const hasMinimal = produkAktif.some(p => p.harga >= 100000);
+    if (hasMinimal) return true;
+  }
+  
+  // Cek riwayat pembelian
+  const snapRiwayat = await get(ref(db, "riwayat_pembelian/" + nohp));
+  if (snapRiwayat.exists()) {
+    const riwayat = Object.values(snapRiwayat.val());
+    const hasMinimal = riwayat.some(p => p.harga >= 100000);
+    if (hasMinimal) return true;
+  }
+  
+  return false;
+}
+
+// ✅ Fungsi untuk memberikan komisi ke upline
+async function berikanKomisiUpline(jumlah, isFirstPurchase) {
+  if (!isFirstPurchase) return; // Hanya berikan komisi untuk pembelian pertama
+  
+  const userRef = ref(db, "users/" + nohp);
+  const userSnap = await get(userRef);
+  const userData = userSnap.val();
+  
+  if (!userData || !userData.upline) return;
+  
+  const upline1 = userData.upline;
+  const upline1Ref = ref(db, "users/" + upline1);
+  const upline1Snap = await get(upline1Ref);
+  const upline1Data = upline1Snap.val();
+  
+  // Komisi level 1 (25%)
+  if (upline1Data) {
+    const komisi1 = jumlah * 0.25;
+    await update(upline1Ref, {
+      saldo: (upline1Data.saldo || 0) + komisi1
+    });
+    
+    // Catat komisi di riwayat
+    await push(ref(db, "riwayat_komisi/" + upline1), {
+      dari: nohp,
+      jumlah: komisi1,
+      level: 1,
+      waktu: new Date().toISOString(),
+      produk: "Komisi Pembelian Pertama"
+    });
+    
+    // Cari upline level 2
+    if (upline1Data.upline) {
+      const upline2 = upline1Data.upline;
+      const upline2Ref = ref(db, "users/" + upline2);
+      const upline2Snap = await get(upline2Ref);
+      const upline2Data = upline2Snap.val();
+      
+      if (upline2Data) {
+        // Komisi level 2 (2%)
+        const komisi2 = jumlah * 0.02;
+        await update(upline2Ref, {
+          saldo: (upline2Data.saldo || 0) + komisi2
+        });
+        
+        // Catat komisi di riwayat
+        await push(ref(db, "riwayat_komisi/" + upline2), {
+          dari: nohp,
+          jumlah: komisi2,
+          level: 2,
+          waktu: new Date().toISOString(),
+          produk: "Komisi Pembelian Pertama"
+        });
+        
+        // Cari upline level 3
+        if (upline2Data.upline) {
+          const upline3 = upline2Data.upline;
+          const upline3Ref = ref(db, "users/" + upline3);
+          const upline3Snap = await get(upline3Ref);
+          const upline3Data = upline3Snap.val();
+          
+          if (upline3Data) {
+            // Komisi level 3 (1%)
+            const komisi3 = jumlah * 0.01;
+            await update(upline3Ref, {
+              saldo: (upline3Data.saldo || 0) + komisi3
+            });
+            
+            // Catat komisi di riwayat
+            await push(ref(db, "riwayat_komisi/" + upline3), {
+              dari: nohp,
+              jumlah: komisi3,
+              level: 3,
+              waktu: new Date().toISOString(),
+              produk: "Komisi Pembelian Pertama"
+            });
+          }
+        }
+      }
+    }
+  }
+}
+
+// ✅ Cek apakah ini pembelian pertama user
+async function isFirstPurchase() {
+  const snap = await get(ref(db, "produk_aktif/" + nohp));
+  return !snap.exists() || Object.keys(snap.val()).length === 0;
+}
+
+// ✅ Render Produk
+async function render() {
+  listEl.innerHTML = "";
+  
+  // Cek apakah user pernah membeli minimal 100rb (untuk produk Orbit Nano)
+  const hasMinimalPurchase = await hasPurchasedMinimal100k();
+  
+  for (const [i, p] of produkList.entries()) {
+    const jumlahBeli = await getJumlahPembelian(p.nama);
+    const sudahMax = jumlahBeli >= p.max_beli;
+    const totalReturn = p.harga + (p.profit_per_hari * p.kontrak);
+    
+    // Khusus untuk Orbit Nano, cek apakah user sudah pernah beli minimal 100rb
+    const isOrbitNano = p.nama === "Orbit Nano";
+    const canBuyNano = !isOrbitNano || (isOrbitNano && hasMinimalPurchase);
+    
+    listEl.innerHTML += `
+    <div class="produk-card">
+      <div class="produk-header"><h3>${p.nama}</h3><div class="badge">${p.profit_percent}% Profit/Hari</div></div>
+      <div class="produk-content">
+        <img src="${p.image}" class="produk-image">
+        <div class="produk-details">
+          <div class="produk-row"><span class="produk-label">Harga:</span><span class="produk-value">Rp${p.harga.toLocaleString()}</span></div>
+          <div class="produk-row"><span class="produk-label">Profit/Hari:</span><span class="produk-value">Rp${p.profit_per_hari.toLocaleString()}</span></div>
+          <div class="produk-row"><span class="produk-label">Siklus:</span><span class="produk-value">${p.kontrak} Hari</span></div>
+          <div class="produk-row"><span class="produk-label">Total Return:</span><span class="produk-value">Rp${totalReturn.toLocaleString()}</span></div>
+          <div class="profit-info">💰 Profit masuk setiap hari</div>
+          <div class="produk-limit">Batas pembelian: ${p.max_beli}x (Terbeli: ${jumlahBeli}x)</div>
+          ${isOrbitNano && !hasMinimalPurchase ? 
+            `<div class="requirement-info">⛔ Harus pernah membeli produk minimal Rp100.000</div>` : ""}
+          ${p.deskripsi ? `<div style="font-size:12px;color:#a0aec0;">${p.deskripsi}</div>` : ""}
+          <button class="produk-button" id="btn-${i}" ${!canBuyNano || sudahMax ? "disabled" : ""}>
+            ${!canBuyNano ? "⛔ Tidak Memenuhi Syarat" : sudahMax ? "✅ Sudah Maksimal" : "Beli Sekarang"}
+          </button>
+        </div>
+      </div>
+    </div>`;
+  }
+  
+  // Tambahkan event listener untuk semua tombol beli
+  for (const [i, p] of produkList.entries()) {
+    const btn = document.getElementById(`btn-${i}`);
+    if (btn && !btn.disabled) {
+      btn.addEventListener('click', () => beli(i));
+    }
+  }
+}
+
+// ✅ Fungsi Beli
+async function beli(i) {
+  const btn = document.getElementById(`btn-${i}`);
+  if (btn) btn.disabled = true;
+  
+  const item = produkList[i];
+  const uRef = ref(db, "users/" + nohp);
+  const uSnap = await get(uRef);
+  
+  if (!uSnap.exists()) return showMsg("User tidak ditemukan", "error");
+  
+  const u = uSnap.val();
+  if ((u.saldo || 0) < item.harga) return showMsg("Saldo tidak cukup!", "error");
+
+  // Cek apakah sudah mencapai batas pembelian
+  const jumlahBeli = await getJumlahPembelian(item.nama);
+  if (jumlahBeli >= item.max_beli) return showMsg("Sudah mencapai batas pembelian!", "error");
+
+  // Khusus Orbit Nano, cek apakah user pernah membeli minimal 100rb
+  if (item.nama === "Orbit Nano" && item.require_minimal_purchase) {
+    const hasMinimalPurchase = await hasPurchasedMinimal100k();
+    if (!hasMinimalPurchase) {
+      return showMsg("Anda harus pernah membeli produk minimal Rp100.000 untuk membeli produk ini", "error");
+    }
+  }
+
+  // Kurangi saldo user
+  await update(uRef, { saldo: u.saldo - item.harga });
+  
+  // Cek apakah ini pembelian pertama
+  const firstPurchase = await isFirstPurchase();
+  
+  // Berikan komisi ke upline jika ini pembelian pertama
+  if (firstPurchase) {
+    await berikanKomisiUpline(item.harga, firstPurchase);
+    
+    // Update data user bahwa sudah melakukan pembelian pertama
+    await update(uRef, {
+      first_product: item.harga,
+      first_product_name: item.nama,
+      first_purchase_date: new Date().toISOString()
+    });
+  }
+  
+  // Tambahkan produk aktif
+  await push(ref(db, "produk_aktif/" + nohp), {
+    nama: item.nama,
+    harga: item.harga,
+    profit_per_hari: item.profit_per_hari,
+    kontrak: item.kontrak,
+    status: "aktif",
+    hari_ke: 0,
+    modal_kembali: true,
+    waktu_beli: new Date().toISOString()
+  });
+  
+  // Catat di riwayat pembelian
+  await push(ref(db, "riwayat_pembelian/" + nohp), {
+    nama: item.nama,
+    harga: item.harga,
+    waktu: new Date().toISOString(),
+    tipe: "produk"
+  });
+  
+  showMsg(`✅ Pembelian ${item.nama} berhasil!`, "success");
+  setTimeout(() => location.reload(), 1500);
+}
+
+// Mengubah fungsi tombol untuk menampilkan COMING SOON
+document.getElementById("toggleBaru").addEventListener("click", () => {
+  showMsg("COMING SOON", "info");
+});
+
+// Event listener untuk tombol Extra Bonus
+document.getElementById("extraBonus").addEventListener("click", () => {
+  showMsg("COMING SOON", "info");
+});
+
+// Render produk saat halaman dimuat
+render();
+</script>
+</body>
+</html>

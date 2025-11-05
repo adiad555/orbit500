@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <title>Keuangan | AntamGrow</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body { font-family: Arial, sans-serif; background:#121212; color:#fff; margin:0; padding:20px; }
+    h2 { color:#f5c518; text-align:center; margin-bottom:30px; }
+    .card {
+      background:#1c1c1c; padding:20px; border-radius:10px;
+      box-shadow:0 0 5px #f5c51844; margin-bottom:20px;
+    }
+    .card h3 { margin:0 0 10px 0; color:#f5c518; }
+    .back-btn {
+      display:block; text-align:center; background:red;
+      color:white; padding:10px; border-radius:8px; text-decoration:none;
+      margin-top:30px;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>📊 Data Keuangan Keseluruhan</h2>
+
+  <div class="card">
+    <h3>Total Deposit Masuk</h3>
+    <p id="total-deposit">Memuat...</p>
+  </div>
+
+  <div class="card">
+    <h3>Total Penarikan User</h3>
+    <p id="total-penarikan">Memuat...</p>
+  </div>
+
+  <div class="card">
+    <h3>Total Saldo Seluruh User</h3>
+    <p id="total-saldo">Memuat...</p>
+  </div>
+
+  <a href="admin.html" class="back-btn">🔙 Kembali ke Panel Admin</a>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyB_eFit5rt0-wOHMp30sw5rsOUzgU1jbQ8",
+      authDomain: "antamgrow.firebaseapp.com",
+      databaseURL: "https://antamgrow-default-rtdb.firebaseio.com",
+      projectId: "antamgrow",
+      storageBucket: "antamgrow.appspot.com",
+      messagingSenderId: "890745577643",
+      appId: "1:890745577643:web:04b8d319cbff04caa497ee"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+    // Total Deposit
+    onValue(ref(db, 'transaksi/deposit'), (snapshot) => {
+      let total = 0;
+      snapshot.forEach(userSnap => {
+        userSnap.forEach(trx => {
+          const data = trx.val();
+          if (data.status === 'acc') {
+            total += data.jumlah || 0;
+          }
+        });
+      });
+      document.getElementById('total-deposit').innerText = 'Rp' + total.toLocaleString();
+    });
+
+    // Total Penarikan
+    onValue(ref(db, 'transaksi/penarikan'), (snapshot) => {
+      let total = 0;
+      snapshot.forEach(userSnap => {
+        userSnap.forEach(trx => {
+          const data = trx.val();
+          if (data.status === 'acc') {
+            total += data.jumlah || 0;
+          }
+        });
+      });
+      document.getElementById('total-penarikan').innerText = 'Rp' + total.toLocaleString();
+    });
+
+    // Total Saldo User
+    onValue(ref(db, 'users'), (snapshot) => {
+      let total = 0;
+      snapshot.forEach(user => {
+        const data = user.val();
+        if (data.saldo) {
+          total += data.saldo;
+        }
+      });
+      document.getElementById('total-saldo').innerText = 'Rp' + total.toLocaleString();
+    });
+  </script>
+</body>
+</html>

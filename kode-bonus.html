@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Klaim Bonus Harian | OrbitSatellite</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+    body {
+      background: #0a0e17;
+      color: #e0f7ff;
+      overflow-x: hidden;
+      overflow-y: auto;
+      padding-bottom: 20px;
+      background-image: 
+        radial-gradient(circle at 20% 30%, rgba(0, 168, 255, 0.1) 0%, transparent 40%),
+        radial-gradient(circle at 80% 70%, rgba(100, 255, 218, 0.1) 0%, transparent 40%);
+    }
+    header {
+      background: linear-gradient(135deg, #0a0e17 0%, #1a283f 100%);
+      color: #64ffda;
+      padding: 20px 16px;
+      text-align: center;
+      font-size: 20px;
+      font-weight: 600;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+      border-bottom: 1px solid rgba(100, 255, 218, 0.2);
+      position: relative;
+    }
+    .back-btn {
+      position: absolute;
+      left: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #64ffda;
+      font-size: 20px;
+      text-decoration: none;
+    }
+    .container {
+      background: rgba(18, 25, 40, 0.9);
+      margin: 20px 16px;
+      padding: 25px;
+      border-radius: 20px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+      border: 1px solid rgba(100, 255, 218, 0.15);
+      backdrop-filter: blur(10px);
+    }
+    .container h3 {
+      color: #00a8ff;
+      text-align: center;
+      margin-bottom: 15px;
+      font-size: 22px;
+      font-weight: 700;
+      text-shadow: 0 0 10px rgba(0, 168, 255, 0.4);
+    }
+    .info {
+      font-size: 15px;
+      color: #a0aec0;
+      text-align: center;
+      margin-bottom: 20px;
+      background: linear-gradient(135deg, rgba(10, 14, 23, 0.8) 0%, rgba(26, 40, 63, 0.8) 100%);
+      padding: 16px;
+      border-radius: 16px;
+      border: 1px solid rgba(100, 255, 218, 0.15);
+      line-height: 1.6;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+    .info b {
+      color: #64ffda;
+      font-weight: 600;
+    }
+    form {
+      display: flex;
+      flex-direction: column;
+    }
+    .input-container {
+      position: relative;
+      margin-bottom: 20px;
+    }
+    input[type="text"] {
+      border: 1px solid rgba(100, 255, 218, 0.3);
+      border-radius: 16px;
+      padding: 18px 20px;
+      margin-bottom: 0;
+      background: rgba(10, 14, 23, 0.8);
+      color: #e0f7ff;
+      font-size: 16px;
+      transition: all 0.3s;
+      width: 100%;
+      box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+    input[type="text"]:focus {
+      outline: none;
+      border-color: #00a8ff;
+      box-shadow: 0 0 0 2px rgba(0, 168, 255, 0.3), inset 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+    button {
+      background: linear-gradient(135deg, #00a8ff, #64ffda);
+      color: #0a0e17;
+      padding: 18px;
+      border: none;
+      border-radius: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s;
+      font-size: 17px;
+      box-shadow: 0 6px 20px rgba(0, 168, 255, 0.4);
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+    button:disabled {
+      background: #4a5568;
+      color: #a0aec0;
+      cursor: not-allowed;
+      box-shadow: none;
+      transform: none !important;
+    }
+    button:hover:enabled {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 25px rgba(0, 168, 255, 0.5);
+    }
+    #statusBox {
+      margin-top: 15px;
+      font-size: 15px;
+      color: #00a8ff;
+      text-align: center;
+      padding: 12px;
+      border-radius: 12px;
+      font-weight: 500;
+    }
+    #statusBox.error {
+      color: #ff6b6b;
+      background: rgba(255, 107, 107, 0.1);
+      border: 1px solid rgba(255, 107, 107, 0.2);
+    }
+    #statusBox.success {
+      color: #64ffda;
+      background: rgba(100, 255, 218, 0.1);
+      border: 1px solid rgba(100, 255, 218, 0.2);
+    }
+    .popup-bg {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(10, 14, 23, 0.95);
+      z-index: 999;
+      justify-content: center;
+      align-items: center;
+      backdrop-filter: blur(5px);
+    }
+    .popup-box {
+      background: linear-gradient(135deg, rgba(18, 25, 40, 0.95) 0%, rgba(26, 40, 63, 0.95) 100%);
+      width: 90%;
+      max-width: 380px;
+      padding: 30px;
+      border-radius: 20px;
+      text-align: center;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(100, 255, 218, 0.2);
+      animation: popIn 0.4s ease-out;
+    }
+    @keyframes popIn {
+      from { transform: scale(0.9); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+    .popup-box h3 {
+      color: #64ffda;
+      margin-bottom: 15px;
+      font-size: 24px;
+      font-weight: 700;
+      text-shadow: 0 0 10px rgba(100, 255, 218, 0.4);
+    }
+    .popup-box p {
+      font-size: 16px;
+      color: #e0f7ff;
+      margin-bottom: 25px;
+      line-height: 1.6;
+    }
+    .popup-box b {
+      color: #64ffda;
+      font-weight: 600;
+    }
+    .popup-box button {
+      background: #64ffda;
+      color: #0a0e17;
+      padding: 14px 28px;
+      border: none;
+      border-radius: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      width: 100%;
+      font-size: 16px;
+      box-shadow: 0 4px 15px rgba(100, 255, 218, 0.4);
+    }
+    .popup-box button:hover {
+      background: #52eec7;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(100, 255, 218, 0.5);
+    }
+    .orbit-bg {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      opacity: 0.1;
+      background: 
+        radial-gradient(circle at 20% 30%, #00a8ff 0%, transparent 40%),
+        radial-gradient(circle at 80% 70%, #64ffda 0%, transparent 40%);
+    }
+    
+    /* Slider Styles */
+    .slider-container {
+      position: relative;
+      width: 100%;
+      height: 200px;
+      margin: 20px 0;
+      overflow: hidden;
+      border-radius: 20px;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
+    }
+    .slider {
+      display: flex;
+      transition: transform 0.5s ease;
+      height: 100%;
+    }
+    .slide {
+      min-width: 100%;
+      height: 100%;
+    }
+    .slide img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .slider-nav {
+      position: absolute;
+      bottom: 12px;
+      left: 0;
+      right: 0;
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+    }
+    .slider-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.5);
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .slider-dot.active {
+      background: #64ffda;
+      transform: scale(1.2);
+      box-shadow: 0 0 10px rgba(100, 255, 218, 0.8);
+    }
+    .slider-btn {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(0, 0, 0, 0.6);
+      color: white;
+      border: none;
+      width: 45px;
+      height: 45px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 20px;
+      z-index: 10;
+      transition: all 0.3s ease;
+    }
+    .slider-btn:hover {
+      background: rgba(0, 168, 255, 0.8);
+    }
+    .slider-btn.prev {
+      left: 12px;
+    }
+    .slider-btn.next {
+      right: 12px;
+    }
+    
+    .bonus-icon {
+      text-align: center;
+      font-size: 60px;
+      margin: 20px 0;
+      color: #64ffda;
+      text-shadow: 0 0 20px rgba(100, 255, 218, 0.6);
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+      100% { transform: scale(1); }
+    }
+    
+    .countdown {
+      text-align: center;
+      margin: 20px 0;
+      font-size: 15px;
+      color: #a0aec0;
+      background: rgba(10, 14, 23, 0.7);
+      padding: 12px;
+      border-radius: 12px;
+      border: 1px solid rgba(100, 255, 218, 0.15);
+    }
+    
+    .countdown span {
+      color: #64ffda;
+      font-weight: 700;
+      font-size: 16px;
+      text-shadow: 0 0 5px rgba(100, 255, 218, 0.5);
+    }
+    
+    .premium-text {
+      background: linear-gradient(135deg, #00a8ff 0%, #64ffda 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      font-weight: 700;
+    }
+    
+    .benefits {
+      display: flex;
+      justify-content: space-around;
+      margin: 20px 0;
+      flex-wrap: wrap;
+    }
+    
+    .benefit-item {
+      text-align: center;
+      width: 45%;
+      margin-bottom: 15px;
+      background: rgba(10, 14, 23, 0.7);
+      padding: 12px;
+      border-radius: 12px;
+      border: 1px solid rgba(100, 255, 218, 0.15);
+    }
+    
+    .benefit-icon {
+      font-size: 24px;
+      color: #64ffda;
+      margin-bottom: 8px;
+    }
+    
+    .benefit-text {
+      font-size: 13px;
+      color: #a0aec0;
+    }
+  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+
+<div class="orbit-bg"></div>
+
+<header>
+  <a href="dashboard.html" class="back-btn"><i class="fas fa-arrow-left"></i></a>
+  <div>KLAIM BONUS HARIAN</div>
+</header>
+
+<!-- Image Slider -->
+<div class="slider-container">
+  <div class="slider">
+    <div class="slide">
+      <img src="https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=1000&auto=format&fit=crop&q=60&ixlib=rb-4.0.3" alt="Bonus Harian OrbitSatellite">
+    </div>
+    <div class="slide">
+      <img src="https://images.unsplash.com/photo-1559526324-4b87b5e36e44?w=1000&auto=format&fit=crop&q=60&ixlib=rb-4.0.3" alt="Hadiah Spesial">
+    </div>
+    <div class="slide">
+      <img src="https://images.unsplash.com/photo-1553729459-efe14ef6055d?w=1000&auto=format&fit=crop&q=60&ixlib=rb-4.0.3" alt="Profit OrbitSatellite">
+    </div>
+    <div class="slide">
+      <img src="https://images.unsplash.com/photo-1551135049-8a33b5883817?w=1000&auto=format&fit=crop&q=60&ixlib=rb-4.0.3" alt="Keuntungan Investasi">
+    </div>
+  </div>
+  <button class="slider-btn prev"><i class="fas fa-chevron-left"></i></button>
+  <button class="slider-btn next"><i class="fas fa-chevron-right"></i></button>
+  <div class="slider-nav">
+    <div class="slider-dot active"></div>
+    <div class="slider-dot"></div>
+    <div class="slider-dot"></div>
+    <div class="slider-dot"></div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="bonus-icon">
+    <i class="fas fa-gift"></i>
+  </div>
+  
+  <h3>Klaim <span class="premium-text">Bonus Eksklusif</span> Anda</h3>
+  
+  <p class="info">✨ Dapatkan bonus harian <b>Rp500 - Rp5.000</b> secara acak!<br>
+     ✅ Setiap member berhak klaim <b>1x dalam 24 jam</b><br>
+     🔥 <b>Hanya 50 member tercepat</b> setiap hari yang beruntung!</p>
+
+  <div class="benefits">
+    <div class="benefit-item">
+      <div class="benefit-icon"><i class="fas fa-bolt"></i></div>
+      <div class="benefit-text">Proses Instan</div>
+    </div>
+    <div class="benefit-item">
+      <div class="benefit-icon"><i class="fas fa-lock"></i></div>
+      <div class="benefit-text">Aman & Terjamin</div>
+    </div>
+  </div>
+
+  <div class="countdown">⏳ Bonus reset dalam: <span id="resetTimer">23:59:59</span></div>
+
+  <form id="bonusForm">
+    <div class="input-container">
+      <input type="text" id="kodeBonus" placeholder="Masukkan kode bonus: BONUSHARI" required>
+    </div>
+    <button id="btnKlaim" type="submit"><i class="fas fa-gift"></i> Klaim Bonus Sekarang</button>
+  </form>
+
+  <div id="statusBox"></div>
+</div>
+
+<!-- ✅ Popup Sukses -->
+<div id="popupSuccess" class="popup-bg">
+  <div class="popup-box">
+    <div style="font-size: 60px; color: #64ffda; margin-bottom: 15px; animation: pulse 2s infinite;">🎉</div>
+    <h3>Selamat! Bonus Terklaim</h3>
+    <p id="bonusAmountText">Bonus harian sebesar <b>Rp1.000</b> telah berhasil ditambahkan ke saldo akun Anda. Terima kasih telah setia bersama <b>OrbitSatellite</b>!</p>
+    <button id="btnOk">Lanjutkan ke Dashboard</button>
+  </div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+import { getDatabase, ref, get, set, update, push } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAuJSxpcFZ1QI-dEsEnx2qSqlb0wsvs6Mc",
+  authDomain: "lginvest-776cf.firebaseapp.com",
+  databaseURL: "https://lginvest-776cf-default-rtdb.firebaseio.com",
+  projectId: "lginvest-776cf",
+  storageBucket: "lginvest-776cf.firebasestorage.app",
+  messagingSenderId: "831934282072",
+  appId: "1:831934282072:web:6a8b7a5bcba5d4d1264d2d",
+  measurementId: "G-265YF9DYCF"
+};
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
+const nohp = localStorage.getItem("nohp") || sessionStorage.getItem("nohp");
+if (!nohp) {
+  alert("Sesi login habis, silakan login ulang.");
+  window.location.href = "index.html";
+}
+
+const BOT_TOKEN = "8484838006:AAEAdgXPYvA_dAzFw0C1rnBiVqbTDPzEVFI";
+const CHAT_ID  = "6706406683";
+
+const KODE_BONUS = "BONUSHARI"; 
+const KUOTA = 20;   // ✅ KUOTA BONUS HARIAN UNTUK 20 USER
+
+const today = new Date().toISOString().split("T")[0];
+const klaimRef = ref(db, `bonus_harian/${nohp}/${today}`);
+const kuotaRef = ref(db, `bonus_kuota/${today}`);
+
+const btnKlaim = document.getElementById("btnKlaim");
+const statusBox = document.getElementById("statusBox");
+const popup = document.getElementById("popupSuccess");
+const btnOk = document.getElementById("btnOk");
+const resetTimer = document.getElementById("resetTimer");
+const bonusAmountText = document.getElementById("bonusAmountText");
+
+function setStatus(msg, type = "info") {
+  statusBox.textContent = msg;
+  statusBox.className = type;
+}
+
+// Fungsi untuk menghasilkan bonus acak antara 500 sampai 1000
+function getRandomBonus() {
+  const amounts = [500, 600, 700, 800, 900, 1000];
+  // Memberikan peluang lebih besar untuk mendapatkan 500-900
+  // dan peluang lebih kecil untuk mendapatkan 1000
+  if (Math.random() < 0.15) { // 15% peluang dapat 1000
+    return 1000;
+  } else {
+    return amounts[Math.floor(Math.random() * 5)]; // 500-900
+  }
+}
+
+// Countdown timer untuk reset bonus harian
+function updateResetTimer() {
+  const now = new Date();
+  const tomorrow = new Date(now);
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  tomorrow.setHours(0, 0, 0, 0);
+  
+  const diff = tomorrow - now;
+  
+  const hours = Math.floor(diff / (1000 * 60 * 60));
+  const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+  const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+  
+  resetTimer.textContent = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+}
+
+setInterval(updateResetTimer, 1000);
+updateResetTimer();
+
+// ✅ Cek jika user sudah klaim
+get(klaimRef).then(snap => {
+  if (snap.exists()) {
+    btnKlaim.disabled = true;
+    btnKlaim.textContent = "Sudah Klaim Hari Ini";
+    setStatus("❌ Anda sudah klaim bonus hari ini. Kembali besok untuk klaim lagi.", "error");
+  }
+});
+
+// ✅ Cek kuota penuh
+get(kuotaRef).then(snap => {
+  if (snap.exists() && snap.val().total >= KUOTA) {
+    btnKlaim.disabled = true;
+    btnKlaim.textContent = "Kuota Bonus Habis";
+    setStatus("❌ Kuota bonus harian telah habis. Silakan coba lagi besok.", "error");
+  }
+});
+
+// ✅ Event klaim
+document.getElementById("bonusForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const kode = document.getElementById("kodeBonus").value.trim().toUpperCase();
+  if (kode !== KODE_BONUS) {
+    setStatus("❌ Kode bonus salah! Pastikan Anda memasukkan kode yang benar.", "error");
+    return;
+  }
+
+  btnKlaim.disabled = true;
+  btnKlaim.textContent = "Memproses...";
+  setStatus("⏳ Sedang memproses klaim bonus Anda...");
+
+  try {
+    const snapKuota = await get(kuotaRef);
+    let jumlah = snapKuota.exists() ? snapKuota.val().total : 0;
+
+    if (jumlah >= KUOTA) {
+      btnKlaim.textContent = "Kuota Bonus Habis";
+      setStatus("❌ Kuota bonus harian telah habis. Silakan coba lagi besok.", "error");
+      return;
+    }
+
+    // Generate random bonus amount
+    const bonusAmount = getRandomBonus();
+    
+    await set(klaimRef, { 
+      klaim: true,
+      amount: bonusAmount,
+      waktu: new Date().toISOString()
+    });
+    
+    await set(kuotaRef, { 
+      total: jumlah + 1,
+      last_updated: new Date().toISOString()
+    });
+
+    const userRef = ref(db, `users/${nohp}`);
+    const snapUser = await get(userRef);
+    if (snapUser.exists()) {
+      const saldo = snapUser.val().saldo || 0;
+      await update(userRef, { saldo: saldo + bonusAmount });
+    }
+
+    const riwayatRef = ref(db, `riwayat/${nohp}`);
+    await push(riwayatRef, {
+      tipe: "Bonus Harian",
+      jumlah: bonusAmount,
+      keterangan: `Klaim kode bonus ${KODE_BONUS}`,
+      waktu: new Date().toISOString()
+    });
+
+    // Update popup text dengan jumlah bonus yang didapat
+    bonusAmountText.innerHTML = `Bonus harian sebesar <b>Rp${bonusAmount.toLocaleString("id-ID")}</b> telah berhasil ditambahkan ke saldo akun Anda. Terima kasih telah setia bersama <b>OrbitSatellite</b>!`;
+
+    await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        chat_id: CHAT_ID,
+        text: `🎁 BONUS HARIAN\n👤 User: ${nohp}\n💰 Rp${bonusAmount.toLocaleString("id-ID")}\n🏆 Peringkat: ${jumlah + 1}/${KUOTA}`
+      })
+    });
+
+    popup.style.display = "flex";
+    setStatus("");
+
+  } catch (err) {
+    console.error(err);
+    setStatus("❌ Gagal klaim bonus: " + err.message, "error");
+    btnKlaim.disabled = false;
+    btnKlaim.textContent = "Klaim Bonus Sekarang";
+  }
+});
+
+btnOk.addEventListener("click", () => window.location.href = "dashboard.html");
+
+// Image Slider functionality
+const slider = document.querySelector('.slider');
+const slides = document.querySelectorAll('.slide');
+const dots = document.querySelectorAll('.slider-dot');
+const prevBtn = document.querySelector('.slider-btn.prev');
+const nextBtn = document.querySelector('.slider-btn.next');
+let currentSlide = 0;
+
+function updateSlider() {
+  slider.style.transform = `translateX(-${currentSlide * 100}%)`;
+  
+  // Update active dot
+  dots.forEach((dot, index) => {
+    dot.classList.toggle('active', index === currentSlide);
+  });
+}
+
+function nextSlide() {
+  currentSlide = (currentSlide + 1) % slides.length;
+  updateSlider();
+}
+
+function prevSlide() {
+  currentSlide = (currentSlide - 1 + slides.length) % slides.length;
+  updateSlider();
+}
+
+// Event listeners for buttons
+nextBtn.addEventListener('click', nextSlide);
+prevBtn.addEventListener('click', prevSlide);
+
+// Event listeners for dots
+dots.forEach((dot, index) => {
+  dot.addEventListener('click', () => {
+    currentSlide = index;
+    updateSlider();
+  });
+});
+
+// Auto slide every 5 seconds
+setInterval(nextSlide, 5000);
+</script>
+
+</body>
+</html>

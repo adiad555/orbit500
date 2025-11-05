@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Profil | OrbitSatellite</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+    body {
+      background: #0a0e17;
+      color: #e0f7ff;
+      overflow-x: hidden;
+      overflow-y: auto;
+      padding-bottom: 80px;
+      background-image: 
+        radial-gradient(circle at 20% 30%, rgba(0, 168, 255, 0.15) 0%, transparent 40%),
+        radial-gradient(circle at 80% 70%, rgba(100, 255, 218, 0.15) 0%, transparent 40%);
+      position: relative;
+    }
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: 
+        radial-gradient(circle at 20% 30%, rgba(0, 168, 255, 0.1) 0%, transparent 20%),
+        radial-gradient(circle at 80% 70%, rgba(100, 255, 218, 0.1) 0%, transparent 20%),
+        radial-gradient(circle at 40% 80%, rgba(108, 92, 231, 0.1) 0%, transparent 20%);
+      z-index: -2;
+    }
+    header {
+      background: linear-gradient(135deg, #0a0e17 0%, #1a283f 100%);
+      color: #64ffda;
+      padding: 20px 16px;
+      text-align: center;
+      font-size: 20px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+      position: relative;
+      border-bottom: 1px solid rgba(100, 255, 218, 0.2);
+    }
+    header::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: linear-gradient(90deg, #00a8ff 0%, #64ffda 100%);
+    }
+    /* Planet Elements */
+    .planet {
+      position: absolute;
+      border-radius: 50%;
+      z-index: -1;
+      opacity: 0.6;
+      filter: blur(1px);
+    }
+    .planet-1 {
+      width: 120px;
+      height: 120px;
+      background: radial-gradient(circle at 30% 30%, #6c5ce7, #0a0e17 70%);
+      top: 15%;
+      left: 10%;
+      box-shadow: 0 0 30px rgba(108, 92, 231, 0.4);
+    }
+    .planet-2 {
+      width: 80px;
+      height: 80px;
+      background: radial-gradient(circle at 30% 30%, #00a8ff, #0a0e17 70%);
+      top: 65%;
+      right: 10%;
+      box-shadow: 0 0 20px rgba(0, 168, 255, 0.4);
+    }
+    /* Profile Card - Enhanced Design */
+    .profile-card {
+      margin: 20px 16px;
+      background: rgba(18, 25, 40, 0.9);
+      padding: 25px;
+      border-radius: 16px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+      border: 1px solid rgba(100, 255, 218, 0.1);
+      backdrop-filter: blur(10px);
+      position: relative;
+      overflow: hidden;
+    }
+    .profile-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: linear-gradient(90deg, #00a8ff, #64ffda);
+    }
+    .profile-card h2 {
+      color: #64ffda;
+      font-size: 20px;
+      margin-bottom: 20px;
+      text-align: center;
+      padding-bottom: 15px;
+      border-bottom: 1px solid rgba(100, 255, 218, 0.2);
+      text-shadow: 0 0 10px rgba(100, 255, 218, 0.3);
+    }
+    .profile-info {
+      margin-bottom: 15px;
+    }
+    .profile-info p {
+      margin-bottom: 15px;
+      font-size: 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(100, 255, 218, 0.1);
+    }
+    .profile-info p:last-child {
+      border-bottom: none;
+    }
+    .profile-info p span:first-child {
+      color: #a0aec0;
+      font-weight: 500;
+    }
+    .profile-info p span:last-child {
+      color: #64ffda;
+      font-weight: 600;
+      text-shadow: 0 0 8px rgba(100, 255, 218, 0.3);
+    }
+    /* Menu Grid - Enhanced Design */
+    .menu-box {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+      margin: 25px 16px;
+    }
+    .menu-item {
+      background: rgba(18, 25, 40, 0.9);
+      border-radius: 12px;
+      padding: 20px 15px;
+      text-align: center;
+      color: #e0f7ff;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 14px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+      transition: all 0.3s ease;
+      border: 1px solid rgba(100, 255, 218, 0.1);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .menu-item::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background: linear-gradient(90deg, #00a8ff, #64ffda);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    .menu-item:hover::before {
+      opacity: 1;
+    }
+    .menu-item i {
+      font-size: 26px;
+      margin-bottom: 12px;
+      color: #64ffda;
+      text-shadow: 0 0 10px rgba(100, 255, 218, 0.4);
+    }
+    .menu-item:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 25px rgba(100, 255, 218, 0.2);
+      background: rgba(26, 35, 56, 0.95);
+    }
+    .logout-btn {
+      grid-column: span 2;
+      background: linear-gradient(to right, #ff4757, #ff3742);
+      color: white;
+      border: none;
+      padding: 18px;
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 15px;
+      cursor: pointer;
+      margin-top: 10px;
+      box-shadow: 0 4px 15px rgba(255, 71, 87, 0.25);
+      transition: all 0.3s ease;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+    }
+    .logout-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 20px rgba(255, 71, 87, 0.35);
+    }
+    /* Bottom Navigation */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 70px;
+      background: rgba(18, 25, 40, 0.95);
+      border-top: 1px solid rgba(100, 255, 218, 0.2);
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      z-index: 999;
+      box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+      backdrop-filter: blur(10px);
+    }
+    .bottom-nav a {
+      text-decoration: none;
+      color: #a0aec0;
+      font-size: 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      flex: 1;
+      padding: 8px 0;
+      transition: all 0.3s;
+    }
+    .bottom-nav a.active {
+      color: #64ffda;
+      font-weight: 600;
+    }
+    .bottom-nav i {
+      font-size: 22px;
+      margin-bottom: 4px;
+    }
+    .bottom-nav a.active i {
+      color: #64ffda;
+    }
+    /* Modal Custom */
+    #modalNama {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(10, 14, 23, 0.95);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      backdrop-filter: blur(5px);
+    }
+    .modal-box {
+      background: rgba(18, 25, 40, 0.95);
+      padding: 25px;
+      border-radius: 16px;
+      width: 90%;
+      max-width: 350px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      text-align: center;
+      border: 1px solid rgba(100, 255, 218, 0.2);
+    }
+    .modal-box h3 {
+      margin-bottom: 15px;
+      color: #64ffda;
+      font-size: 18px;
+    }
+    .modal-box input {
+      width: 100%;
+      padding: 12px 15px;
+      border: 1px solid rgba(100, 255, 218, 0.3);
+      border-radius: 10px;
+      margin-bottom: 20px;
+      background: rgba(10, 14, 23, 0.8);
+      color: #e0f7ff;
+      font-size: 15px;
+    }
+    .modal-box input:focus {
+      outline: none;
+      border-color: #00a8ff;
+      box-shadow: 0 0 0 3px rgba(0, 168, 255, 0.3);
+    }
+    .modal-btn {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .modal-btn button {
+      flex: 1;
+      padding: 12px;
+      border: none;
+      border-radius: 10px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    .batal {
+      background: rgba(74, 85, 104, 0.8);
+      color: #e0f7ff;
+    }
+    .batal:hover {
+      background: rgba(74, 85, 104, 1);
+    }
+    .simpan {
+      background: linear-gradient(to right, #00a8ff, #64ffda);
+      color: #0a0e17;
+    }
+    .simpan:hover {
+      box-shadow: 0 4px 15px rgba(0, 168, 255, 0.3);
+    }
+    /* Edit Icon */
+    .fa-edit {
+      cursor: pointer;
+      color: #00a8ff !important;
+      margin-left: 8px;
+      transition: all 0.3s;
+    }
+    .fa-edit:hover {
+      color: #64ffda !important;
+      text-shadow: 0 0 8px rgba(100, 255, 218, 0.5);
+    }
+  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+
+  <!-- Planet Elements -->
+  <div class="planet planet-1"></div>
+  <div class="planet planet-2"></div>
+
+  <header>
+    <div>ORBIT SATELLITE</div>
+    <div>PROFIL PENGGUNA</div>
+  </header>
+
+  <div class="profile-card">
+    <h2>INFORMASI AKUN</h2>
+    <div class="profile-info">
+      <p><span>Nama Lengkap:</span><span id="nama">-</span></p>
+      <p><span>Nomor HP:</span><span id="nohp">-</span></p>
+      <p><span>Saldo:</span><span id="saldo">Rp0</span></p>
+      <p><span>Total Profit:</span><span id="totalProfit">Rp0</span></p>
+      <p><span>Total Komisi:</span><span id="totalKomisi">Rp0</span></p>
+    </div>
+  </div>
+
+  <div class="menu-box">
+    <a href="deposit.html" class="menu-item"><i class="fas fa-credit-card"></i>DEPOSIT</a>
+    <a href="penarikan.html" class="menu-item"><i class="fas fa-money-bill-wave"></i>PENARIKAN</a>
+    <a href="rekening.html" class="menu-item"><i class="fas fa-university"></i>REKENING</a>
+    <a href="bantuan.html" class="menu-item"><i class="fas fa-question-circle"></i>BANTUAN</a>
+    <a href="https://t.me/+T8cYzjjzCLE5MWE1" class="menu-item" target="_blank"><i class="fab fa-telegram"></i>GRUP TELEGRAM</a>
+    <a href="bonus.html" class="menu-item"><i class="fas fa-gift"></i>BONUS EXTRA</a>
+    <button class="logout-btn" onclick="logout()"><i class="fas fa-sign-out-alt"></i>KELUAR</button>
+  </div>
+
+  <div class="bottom-nav">
+    <a href="dashboard.html"><i class="fas fa-home"></i>Home</a>
+    <a href="produk.html"><i class="fas fa-shopping-bag"></i>Produk</a>
+    <a href="riwayat.html"><i class="fas fa-history"></i>Riwayat</a>
+    <a href="team.html"><i class="fas fa-users"></i>Team</a>
+    <a href="profil.html" class="active"><i class="fas fa-user"></i>Profil</a>
+  </div>
+
+  <!-- Modal Input Nama -->
+  <div id="modalNama">
+    <div class="modal-box">
+      <h3>Masukkan Nama Lengkap Anda</h3>
+      <input type="text" id="inputNama" placeholder="Nama lengkap...">
+      <div class="modal-btn">
+        <button class="batal" onclick="tutupModal()">Batal</button>
+        <button class="simpan" onclick="simpanNama()">Simpan</button>
+      </div>
+    </div>
+  </div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+import { getDatabase, ref, get, update } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAuJSxpcFZ1QI-dEsEnx2qSqlb0wsvs6Mc",
+  authDomain: "lginvest-776cf.firebaseapp.com",
+  databaseURL: "https://lginvest-776cf-default-rtdb.firebaseio.com",
+  projectId: "lginvest-776cf",
+  storageBucket: "lginvest-776cf.firebasestorage.app",
+  messagingSenderId: "831934282072",
+  appId: "1:831934282072:web:6a8b7a5bcba5d4d1264d2d",
+  measurementId: "G-265YF9DYCF"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
+const nohp = localStorage.getItem("nohp") || sessionStorage.getItem("nohp");
+if (!nohp) {
+  window.location.href = "index.html";
+}
+
+const modal = document.getElementById("modalNama");
+const inputNama = document.getElementById("inputNama");
+let userRef = ref(db, "users/" + nohp);
+
+get(userRef).then(snap => {
+  if (snap.exists()) {
+    const d = snap.val();
+    document.getElementById("nama").textContent = d.nama || "-";
+    document.getElementById("nohp").textContent = nohp;
+    document.getElementById("saldo").textContent = "Rp" + Number(d.saldo || 0).toLocaleString("id-ID");
+    document.getElementById("totalProfit").textContent = "Rp" + Number(d.total_profit || 0).toLocaleString("id-ID");
+    document.getElementById("totalKomisi").textContent = "Rp" + Number(d.total_komisi || 0).toLocaleString("id-ID");
+
+    if (!d.nama) {
+      const edit = document.createElement("i");
+      edit.className = "fas fa-edit";
+      edit.style.cursor = "pointer";
+      edit.style.marginLeft = "8px";
+      document.getElementById("nama").parentElement.appendChild(edit);
+      edit.onclick = () => {
+        modal.style.display = "flex";
+      };
+    }
+  }
+});
+
+window.tutupModal = () => {
+  modal.style.display = "none";
+}
+window.simpanNama = async () => {
+  const nama = inputNama.value.trim();
+  if (!nama) return;
+  await update(userRef, { nama: nama });
+  const rekRef = ref(db, "rekening/" + nohp);
+  const rsnap = await get(rekRef);
+  if (rsnap.exists()) await update(rekRef, { nama: nama });
+  modal.style.display = "none";
+  location.reload();
+}
+
+window.logout = function() {
+  localStorage.removeItem("nohp");
+  sessionStorage.removeItem("nohp");
+  window.location.href = "index.html";
+}
+</script>
+</body>
+</html>

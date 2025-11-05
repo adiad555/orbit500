@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+<title>Reward Bonus Ajak Teman | OrbitSatellite</title>
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
+body {
+  background: #0a0e17;
+  color: #e0f7ff;
+  padding-bottom: 80px;
+  overflow-x: hidden;
+  background-image: 
+    radial-gradient(circle at 20% 30%, rgba(0, 168, 255, 0.1) 0%, transparent 40%),
+    radial-gradient(circle at 80% 70%, rgba(100, 255, 218, 0.1) 0%, transparent 40%);
+}
+header {
+  background: linear-gradient(135deg, #00a8ff, #64ffda);
+  color: #0a0e17;
+  text-align: center;
+  padding: 18px;
+  font-size: 20px;
+  font-weight: 600;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+}
+header::after {
+  content: '';
+  display: block;
+  height: 4px;
+  background: linear-gradient(90deg, #64ffda, #00a8ff);
+}
+.info-box {
+  background: rgba(18, 25, 40, 0.9);
+  border-radius: 12px;
+  margin: 15px;
+  padding: 15px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+  font-size: 14px;
+  line-height: 1.6;
+  border: 1px solid rgba(100, 255, 218, 0.1);
+}
+.bonus-card {
+  border-radius: 14px;
+  margin: 12px;
+  padding: 16px;
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+.bonus-card h3 {
+  font-size: 18px;
+  margin-bottom: 5px;
+}
+.bonus-card p {
+  font-size: 14px;
+  margin: 3px 0;
+}
+.icon-bonus {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 30px;
+  opacity: 0.3;
+}
+.claim-btn {
+  background: #0a0e17;
+  color: #64ffda;
+  border: 1px solid rgba(100, 255, 218, 0.3);
+  padding: 8px 15px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 600;
+  margin-top: 10px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+.claim-btn.glow {
+  animation: pulse 1.5s infinite;
+}
+.claim-btn:hover {
+  transform: scale(1.05);
+  background: rgba(100, 255, 218, 0.1);
+}
+.claim-btn:disabled {
+  background: #4a5568;
+  color: #a0aec0;
+  cursor: not-allowed;
+}
+@keyframes pulse {
+  0% { box-shadow: 0 0 5px #64ffda; }
+  50% { box-shadow: 0 0 15px #64ffda; }
+  100% { box-shadow: 0 0 5px #64ffda; }
+}
+.progress-container {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  margin-top: 10px;
+  overflow: hidden;
+  height: 10px;
+}
+.progress-bar {
+  height: 10px;
+  background: linear-gradient(90deg, #00a8ff, #64ffda);
+  border-radius: 10px;
+  width: 0%;
+  transition: width 0.5s;
+}
+.c1 { background: linear-gradient(135deg, #00a8ff, #64ffda); }
+.c2 { background: linear-gradient(135deg, #64ffda, #00a8ff); }
+.c3 { background: linear-gradient(135deg, #00a8ff, #64ffda); }
+.c4 { background: linear-gradient(135deg, #64ffda, #00a8ff); }
+.c5 { background: linear-gradient(135deg, #00a8ff, #64ffda); }
+.c6 { background: linear-gradient(135deg, #64ffda, #00a8ff); }
+.c7 { background: linear-gradient(135deg, #00a8ff, #64ffda); }
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 70px;
+  background: rgba(18, 25, 40, 0.95);
+  border-top: 1px solid rgba(100, 255, 218, 0.2);
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+  backdrop-filter: blur(10px);
+}
+.bottom-nav a {
+  text-decoration: none;
+  color: #a0aec0;
+  font-size: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+}
+.bottom-nav a.active {
+  color: #64ffda;
+  font-weight: 600;
+}
+.bottom-nav i {
+  font-size: 22px;
+  margin-bottom: 4px;
+}
+#refCount {
+  text-align: center;
+  font-weight: 600;
+  color: #64ffda;
+  margin: 15px 0;
+}
+#confettiCanvas, #confettiExplosion {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+#confettiCanvas { z-index: 1; }
+#confettiExplosion { z-index: 999; }
+#popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.5);
+  background: rgba(18, 25, 40, 0.95);
+  padding: 20px 25px;
+  border-radius: 12px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  z-index: 1000;
+  opacity: 0;
+  transition: all .3s;
+  border: 1px solid rgba(100, 255, 218, 0.2);
+}
+#popup.show {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
+#popup h2 {
+  color: #64ffda;
+  margin-bottom: 5px;
+}
+.orbit-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  opacity: 0.1;
+  background: 
+    radial-gradient(circle at 20% 30%, #00a8ff 0%, transparent 40%),
+    radial-gradient(circle at 80% 70%, #64ffda 0%, transparent 40%);
+}
+</style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+
+<div class="orbit-bg"></div>
+<canvas id="confettiCanvas"></canvas>
+<canvas id="confettiExplosion"></canvas>
+<div id="popup"><h2>🎉 Selamat!</h2><p>Bonus berhasil masuk ke saldo Anda</p></div>
+
+<header>🎁 REWARD BONUS AJAK TEMAN</header>
+
+<div class="info-box">
+  <p>🔥 <b>Bonus Extra</b> diberikan hanya untuk referral <b>Level 1</b> yang sudah membeli produk (memiliki first_product > 0).</p>
+  <p>✅ Referral Level 2/3 tidak dihitung.</p>
+  <p>✅ Setelah klaim, saldo otomatis bertambah dan tombol terkunci.</p>
+</div>
+
+<div id="refCount">Total Referral Level 1 (Beli Produk): 0</div>
+<div id="bonus-list"></div>
+
+<div class="bottom-nav">
+  <a href="dashboard.html"><i class="fas fa-home"></i>Home</a>
+  <a href="produk.html"><i class="fas fa-shopping-bag"></i>Produk</a>
+  <a href="riwayat.html"><i class="fas fa-history"></i>Riwayat</a>
+  <a href="team.html"><i class="fas fa-users"></i>Team</a>
+  <a href="profil.html"><i class="fas fa-user"></i>Profil</a>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+import { getDatabase, ref, get, update } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAuJSxpcFZ1QI-dEsEnx2qSqlb0wsvs6Mc",
+  authDomain: "lginvest-776cf.firebaseapp.com",
+  databaseURL: "https://lginvest-776cf-default-rtdb.firebaseio.com",
+  projectId: "lginvest-776cf",
+  storageBucket: "lginvest-776cf.firebasestorage.app",
+  messagingSenderId: "831934282072",
+  appId: "1:831934282072:web:6a8b7a5bcba5d4d1264d2d",
+  measurementId: "G-265YF9DYCF"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+const nohp = localStorage.getItem("nohp") || sessionStorage.getItem("nohp");
+if (!nohp) {
+  alert("Login dulu!");
+  location.href = "index.html";
+}
+
+// 🎯 DATA BONUS
+const bonusData = [
+  { id: 1, syarat: 3, hadiah: 10000 },
+  { id: 2, syarat: 5, hadiah: 25000 },
+  { id: 3, syarat: 10, hadiah: 50000 },
+  { id: 4, syarat: 50, hadiah: 280000 },
+  { id: 5, syarat: 100, hadiah: 600000 },
+  { id: 6, syarat: 200, hadiah: 1400000 },
+  { id: 7, syarat: 500, hadiah: 3200000 },
+];
+
+// ✅ Hitung referral Level 1 yg beli produk (first_product > 0)
+async function hitungReferralLevel1(upline) {
+  const snap = await get(ref(db, "users"));
+  if (!snap.exists()) return 0;
+  const users = snap.val();
+  let count = 0;
+  for (const uid in users) {
+    if (users[uid].upline === upline && (users[uid].first_product || 0) > 0) {
+      count++;
+    }
+  }
+  return count;
+}
+
+// ✅ Load Bonus
+async function loadBonus() {
+  const uref = ref(db, "users/" + nohp);
+  const usnap = await get(uref);
+  if (!usnap.exists()) return;
+  const user = usnap.val();
+
+  const referrals = await hitungReferralLevel1(nohp);
+  document.getElementById("refCount").innerHTML = `Total Referral Level 1 (Beli Produk): <b>${referrals}</b>`;
+
+  const claimed = user.bonus_claimed || {};
+  const container = document.getElementById("bonus-list");
+  container.innerHTML = "";
+
+  bonusData.forEach((b, i) => {
+    const sudah = claimed[b.id];
+    const memenuhi = referrals >= b.syarat;
+    const progress = Math.min(100, (referrals / b.syarat) * 100);
+    container.innerHTML += `
+      <div class="bonus-card c${i + 1}">
+        <span class="icon-bonus">🎁</span>
+        <h3>Bonus ${b.id}</h3>
+        <p>Syarat: Ajak ${b.syarat} orang Level 1 (Beli Produk)</p>
+        <p>Hadiah: Rp${b.hadiah.toLocaleString("id-ID")}</p>
+        <div class="progress-container"><div class="progress-bar" style="width:${progress}%;"></div></div>
+        <button class="claim-btn ${(memenuhi && !sudah) ? "glow" : ""}" ${(memenuhi && !sudah) ? "" : "disabled"} onclick="claimBonus(${b.id},${b.hadiah})">
+          ${sudah ? "✅ Sudah Diklaim" : memenuhi ? "✨ Klaim Sekarang" : "⏳ Belum Memenuhi"}
+        </button>
+      </div>`;
+  });
+}
+
+// ✅ Claim Bonus
+window.claimBonus = async function(id, hadiah) {
+  const uref = ref(db, "users/" + nohp);
+  const usnap = await get(uref);
+  if (!usnap.exists()) return;
+  const user = usnap.val();
+
+  const saldoBaru = (user.saldo || 0) + hadiah;
+  const claimed = user.bonus_claimed || {};
+  claimed[id] = true;
+  await update(uref, { saldo: saldoBaru, bonus_claimed: claimed });
+
+  showPopup();
+  triggerExplosion();
+  loadBonus();
+};
+
+// === Popup ===
+function showPopup() {
+  const p = document.getElementById("popup");
+  p.classList.add("show");
+  setTimeout(() => p.classList.remove("show"), 2500);
+}
+
+// === Confetti Explosion ===
+const expCanvas = document.getElementById("confettiExplosion");
+const expCtx = expCanvas.getContext("2d");
+expCanvas.width = innerWidth;
+expCanvas.height = innerHeight;
+
+function triggerExplosion() {
+  let parts = [];
+  for (let i = 0; i < 120; i++) {
+    parts.push({
+      x: expCanvas.width / 2,
+      y: expCanvas.height / 2,
+      r: Math.random() * 6 + 2,
+      c: `hsl(${Math.random() * 360},100%,50%)`,
+      vx: (Math.random() - 0.5) * 8,
+      vy: (Math.random() - 0.5) * 8,
+      life: 100
+    });
+  }
+  function draw() {
+    expCtx.clearRect(0, 0, expCanvas.width, expCanvas.height);
+    parts.forEach(p => {
+      expCtx.beginPath();
+      expCtx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      expCtx.fillStyle = p.c;
+      expCtx.fill();
+      p.x += p.vx;
+      p.y += p.vy;
+      p.vy += 0.05;
+      p.life--;
+    });
+    parts = parts.filter(p => p.life > 0);
+    if (parts.length > 0) requestAnimationFrame(draw);
+  }
+  draw();
+}
+
+loadBonus();
+</script>
+</body>
+</html>

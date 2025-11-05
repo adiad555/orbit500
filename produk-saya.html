@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Produk & Claim | OrbitSatellite</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+    body {
+      background: #0a0e17;
+      color: #e0f7ff;
+      overflow-x: hidden;
+      padding-bottom: 80px;
+      min-height: 100vh;
+      position: relative;
+    }
+
+    /* Tambahkan style yang diperlukan di sini */
+    header {
+      background: linear-gradient(135deg, #0d2b45 0%, #1a3c5a 100%);
+      padding: 15px 20px;
+      text-align: center;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      border-bottom: 1px solid #1e4976;
+    }
+    
+    header div:first-child {
+      font-size: 18px;
+      font-weight: 700;
+      color: #00a8ff;
+      letter-spacing: 1px;
+      margin-bottom: 5px;
+    }
+    
+    header div:last-child {
+      font-size: 14px;
+      font-weight: 500;
+      color: #a0d2ff;
+    }
+    
+    .produk-container {
+      padding: 20px;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    
+    .produk-card {
+      background: linear-gradient(135deg, #152642 0%, #1c2f4d 100%);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 20px;
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+      border: 1px solid #254b75;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .produk-info {
+      display: flex;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+    
+    .produk-logo {
+      width: 60px;
+      height: 60px;
+      border-radius: 12px;
+      object-fit: cover;
+      margin-right: 15px;
+      border: 2px solid #2a5d8a;
+    }
+    
+    .produk-info-text {
+      flex: 1;
+    }
+    
+    .produk-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+    
+    .produk-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: #ffffff;
+    }
+    
+    .produk-status {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 8px;
+      border-radius: 20px;
+    }
+    
+    .status-aktif {
+      background: rgba(0, 168, 255, 0.2);
+      color: #00a8ff;
+      border: 1px solid #00a8ff;
+    }
+    
+    .status-selesai {
+      background: rgba(76, 175, 80, 0.2);
+      color: #4caf50;
+      border: 1px solid #4caf50;
+    }
+    
+    .status-berakhir {
+      background: rgba(244, 67, 54, 0.2);
+      color: #f44336;
+      border: 1px solid #f44336;
+    }
+    
+    .produk-detail {
+      display: flex;
+      justify-content: space-between;
+      font-size: 13px;
+      margin-bottom: 5px;
+      color: #a0d2ff;
+    }
+    
+    .produk-detail strong {
+      color: #ffffff;
+    }
+    
+    .hari-info {
+      font-size: 13px;
+      text-align: center;
+      padding: 8px;
+      background: rgba(0, 168, 255, 0.1);
+      border-radius: 8px;
+      margin-bottom: 10px;
+      color: #00a8ff;
+    }
+    
+    .claim-box {
+      text-align: center;
+    }
+    
+    .claim-timer {
+      font-size: 13px;
+      color: #a0d2ff;
+      margin-bottom: 10px;
+    }
+    
+    .claim-btn {
+      background: linear-gradient(135deg, #00a8ff 0%, #0088cc 100%);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 12px 20px;
+      width: 100%;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      font-size: 14px;
+    }
+    
+    .claim-btn:hover:not(:disabled) {
+      background: linear-gradient(135deg, #0088cc 0%, #006699 100%);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 168, 255, 0.3);
+    }
+    
+    .claim-btn:disabled {
+      background: #2a4365;
+      color: #a0d2ff;
+      cursor: not-allowed;
+    }
+    
+    .claim-btn.loading {
+      background: #2a4365;
+      color: #a0d2ff;
+    }
+    
+    .auto-claim-info {
+      font-size: 11px;
+      color: #a0d2ff;
+      margin-top: 10px;
+      opacity: 0.8;
+    }
+    
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: #0d2b45;
+      display: flex;
+      justify-content: space-around;
+      padding: 12px 0;
+      box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.3);
+      z-index: 1000;
+      border-top: 1px solid #1e4976;
+    }
+    
+    .bottom-nav a {
+      color: #a0d2ff;
+      text-decoration: none;
+      font-size: 11px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    
+    .bottom-nav a i {
+      font-size: 18px;
+      margin-bottom: 4px;
+    }
+    
+    .bottom-nav a.active {
+      color: #00a8ff;
+    }
+    
+    .empty-state {
+      text-align: center;
+      color: #a0aec0;
+      padding: 40px 20px;
+    }
+    
+    .empty-state i {
+      font-size: 40px;
+      color: #00a8ff;
+      margin-bottom: 16px;
+      opacity: 0.7;
+    }
+    
+    .stars {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: -1;
+    }
+    
+    .star {
+      position: absolute;
+      background-color: white;
+      border-radius: 50%;
+      animation: twinkle linear infinite;
+    }
+    
+    @keyframes twinkle {
+      0%, 100% { opacity: 0.2; }
+      50% { opacity: 1; }
+    }
+    
+    .toast {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #323232;
+      color: white;
+      padding: 12px 24px;
+      border-radius: 4px;
+      z-index: 1000;
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+      display: none;
+    }
+    
+    .toast.success {
+      background: #43a047;
+    }
+    
+    .toast.error {
+      background: #d32f2f;
+    }
+  </style>
+</head>
+<body>
+  <div class="space-background"></div>
+  <div class="stars" id="stars"></div>
+  <div id="toast" class="toast"></div>
+
+  <header>
+    <div>ORBIT SATELLITE</div>
+    <div>PRODUK & CLAIM PROFIT</div>
+  </header>
+
+  <div class="produk-container" id="produkList">
+    <div class="empty-state" style="text-align:center;color:#a0aec0;padding:40px 20px">
+      <i class="fas fa-box-open" style="font-size:40px;color:#00a8ff;margin-bottom:16px;opacity:.7"></i>
+      <p>Memuat produk Anda...</p>
+    </div>
+  </div>
+
+  <div class="bottom-nav">
+    <a href="dashboard.html"><i class="fas fa-home"></i>Home</a>
+    <a href="produk.html"><i class="fas fa-shopping-bag"></i>Produk</a>
+    <a href="produk-saya.html" class="active"><i class="fas fa-box-open"></i>Produk Saya</a>
+    <a href="riwayat.html"><i class="fas fa-history"></i>Riwayat</a>
+    <a href="profil.html"><i class="fas fa-user"></i>Profil</a>
+  </div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+import { getDatabase, ref, get, push, runTransaction, onValue } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAuJSxpcFZ1QI-dEsEnx2qSqlb0wsvs6Mc",
+  authDomain: "lginvest-776cf.firebaseapp.com",
+  databaseURL: "https://lginvest-776cf-default-rtdb.firebaseio.com",
+  projectId: "lginvest-776cf",
+  storageBucket: "lginvest-776cf.firebasestorage.app",
+  messagingSenderId: "831934282072",
+  appId: "1:831934282072:web:6a8b7a5bcba5d4d1264d2d",
+  measurementId: "G-265YF9DYCF"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
+const toast = (m, t = '') => {
+  const el = document.getElementById('toast');
+  el.textContent = m;
+  el.className = `toast ${t}`;
+  el.style.display = 'block';
+  setTimeout(() => el.style.display = 'none', 3000);
+};
+
+const nohp = localStorage.getItem("nohp") || sessionStorage.getItem("nohp");
+if (!nohp) {
+  toast("Sesi habis, login ulang", "error");
+  setTimeout(() => location.href = "index.html", 1500);
+}
+
+// Daftar gambar produk berdasarkan nama
+const produkImages = {
+  "Orbit Nano": "https://images.unsplash.com/photo-1446776653964-20c1d3a81b06?w=400&h=400&fit=crop",
+  "Orbit Mini": "https://images.unsplash.com/photo-1462331940025-496dfbfc7564?w=400&h=400&fit=crop",
+  "Orbit Basic": "https://images.unsplash.com/photo-1465101162946-4377e57745c3?w=400&h=400&fit=crop",
+  "Orbit Standard": "https://images.unsplash.com/photo-1502136969935-8d8eef54d77b?w=400&h=400&fit=crop",
+  "Orbit Plus": "https://images.unsplash.com/photo-1464802686167-b939a6910659?w=400&h=400&fit=crop",
+  "Orbit Pro": "https://images.unsplash.com/photo-1505506874110-6a7a69069a08?w=400&h=400&fit=crop",
+  "Orbit Advanced": "https://images.unsplash.com/photo-1543722530-d2c3201371e7?w=400&h=400&fit=crop",
+  "Orbit Premium": "https://images.unsplash.com/photo-1462331940025-496dfbfc7564?w=400&h=400&fit=crop",
+  "Orbit Elite": "https://images.unsplash.com/photo-1446776877081-d282a0f896e2?w=400&h=400&fit=crop",
+  "Orbit Supreme": "https://images.unsplash.com/photo-1462331940025-496dfbfc7564?w=400&h=400&fit=crop",
+  "Orbit Galaxy": "https://images.unsplash.com/photo-1502136969935-8d8eef54d77b?w=400&h=400&fit=crop",
+  "Orbit Universe": "https://images.unsplash.com/photo-1465101162946-4377e57745c3?w=400&h=400&fit=crop"
+};
+
+// Fungsi untuk mendapatkan gambar produk berdasarkan nama
+function getProdukImage(namaProduk) {
+  return produkImages[namaProduk] || "https://via.placeholder.com/100?text=🛰️";
+}
+
+// 🔥 Fungsi format waktu
+const formatTime = (ms) => {
+  const s = Math.floor(ms / 1000);
+  const h = Math.floor(s / 3600);
+  const m = Math.floor((s % 3600) / 60);
+  const sec = s % 60;
+  return `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${sec.toString().padStart(2, '0')}`;
+};
+
+// ✅ Fungsi untuk mengecek dan memberikan profit otomatis
+async function checkAutoProfit(produkId, produkData) {
+  const now = new Date();
+  const lastClaimTime = produkData.terakhir_profit ? new Date(produkData.terakhir_profit) : new Date(produkData.waktu_beli);
+  const hoursSinceLastClaim = (now - lastClaimTime) / (1000 * 60 * 60);
+  
+  // Jika sudah lebih dari 24 jam sejak claim terakhir
+  if (hoursSinceLastClaim >= 24) {
+    const kontrak = produkData.modal_kembali ? 10 : (produkData.kontrak || 32);
+    const claimCount = produkData.claim_count || 0;
+    
+    if (claimCount < kontrak) {
+      // Berikan profit otomatis
+      await runTransaction(ref(db, `users/${nohp}`), u => {
+        if (!u) u = { saldo: 0 };
+        u.saldo = (u.saldo || 0) + produkData.profit_per_hari;
+        return u;
+      });
+      
+      // Update data produk
+      await runTransaction(ref(db, `produk_aktif/${nohp}/${produkId}`), data => {
+        if (!data) return data;
+        data.terakhir_profit = now.toISOString();
+        data.claim_count = (data.claim_count || 0) + 1;
+        return data;
+      });
+      
+      // Catat di riwayat
+      await push(ref(db, `riwayat_transaksi/${nohp}/profit`), {
+        nama_produk: produkData.nama,
+        jumlah: produkData.profit_per_hari,
+        waktu: now.toISOString(),
+        status: "sukses",
+        catatan: `Profit otomatis hari ke-${claimCount + 1}`,
+        tipe: "otomatis"
+      });
+      
+      console.log(`Profit otomatis diberikan untuk ${produkData.nama}`);
+    }
+  }
+}
+
+// ✅ Countdown
+function startCountdown(last, btn, timer, infoHari, sisa, total) {
+  function tick() {
+    const now = new Date();
+    const next = new Date(last.getTime() + 86400000);
+    const diff = next - now;
+    if (diff <= 0) {
+      timer.textContent = "⏳ Siap di-claim!";
+      btn.disabled = false;
+      btn.innerHTML = `<i class="fas fa-hand-holding-usd"></i> CLAIM PROFIT`;
+      clearInterval(timer._int);
+    } else {
+      timer.textContent = `Sisa waktu: ${formatTime(diff)}`;
+      btn.disabled = true;
+      btn.innerHTML = `<i class="fas fa-check-circle"></i> PRODUK AKTIF`;
+    }
+  }
+  infoHari.textContent = `Hari ke-${total - sisa + 1} | Sisa ${sisa} hari claim`;
+  tick();
+  timer._int = setInterval(tick, 1000);
+}
+
+// ✅ Claim Profit dengan modal kembali untuk produk baru
+async function claimProfit(id, nama, profit, hariKe, sisa, kontrak, modalKembali, harga) {
+  const btn = document.querySelector(`.claim-btn[data-id="${id}"]`);
+  const timer = document.getElementById(`timer-${id}`);
+  const infoHari = document.getElementById(`hari-${id}`);
+  btn.disabled = true;
+  btn.classList.add("loading");
+  btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> MEMPROSES...`;
+  
+  try {
+    const now = new Date();
+    const pRef = ref(db, `produk_aktif/${nohp}/${id}`);
+    let count = hariKe;
+    
+    await runTransaction(pRef, data => {
+      if (!data) return data;
+      const last = data.terakhir_profit ? new Date(data.terakhir_profit) : new Date(data.waktu_beli);
+      if (now - last < 86400000) throw new Error("Belum waktunya claim");
+      if ((data.claim_count || 0) >= kontrak) throw new Error("Masa claim sudah habis");
+      data.terakhir_profit = now.toISOString();
+      data.claim_count = (data.claim_count || 0) + 1;
+      count = data.claim_count;
+      return data;
+    });
+
+    await runTransaction(ref(db, `users/${nohp}`), u => {
+      if (!u) u = { saldo: 0 };
+      u.saldo = (u.saldo || 0) + profit;
+      return u;
+    });
+    
+    await push(ref(db, `riwayat_transaksi/${nohp}/profit`), {
+      nama_produk: nama,
+      jumlah: profit,
+      waktu: now.toISOString(),
+      status: "sukses",
+      catatan: `Claim hari ke-${count}`,
+      tipe: "manual"
+    });
+
+    if (count >= kontrak && modalKembali) {
+      await runTransaction(ref(db, `users/${nohp}`), u => {
+        if (!u) u = { saldo: 0 };
+        u.saldo += harga;
+        return u;
+      });
+      
+      await push(ref(db, `riwayat_transaksi/${nohp}/pengembalian_modal`), {
+        nama_produk: nama,
+        jumlah: harga,
+        waktu: now.toISOString(),
+        status: "sukses",
+        catatan: "Pengembalian modal selesai"
+      });
+      
+      toast(`🎉 Kontrak selesai! Modal Rp${harga.toLocaleString('id-ID')} telah dikembalikan`, "success");
+    }
+
+    toast(`✅ Claim hari ke-${count} sukses! +Rp${profit.toLocaleString('id-ID')}`, "success");
+    const nextSisa = kontrak - count;
+    startCountdown(now, btn, timer, infoHari, nextSisa, kontrak);
+  } catch (e) {
+    toast(e.message, "error");
+    btn.disabled = false;
+    btn.innerHTML = `<i class="fas fa-hand-holding-usd"></i> CLAIM PROFIT`;
+  } finally {
+    btn.classList.remove("loading");
+  }
+}
+
+// ✅ Render Produk
+function renderProduk(p, id) {
+  const kontrak = p.modal_kembali ? 10 : (p.kontrak || 32);
+  const hariKe = (p.claim_count || 0) + 1;
+  const sisa = kontrak - (p.claim_count || 0);
+  const last = p.terakhir_profit ? new Date(p.terakhir_profit) : new Date(p.waktu_beli);
+  const disable = Date.now() - last < 86400000;
+  const expired = (p.claim_count || 0) >= kontrak;
+
+  // Tentukan status produk
+  let statusText, statusClass;
+  if (expired) {
+    statusText = "BERAKHIR";
+    statusClass = "status-berakhir";
+  } else {
+    statusText = "AKTIF";
+    statusClass = "status-aktif";
+  }
+
+  const card = document.createElement("div");
+  card.className = "produk-card";
+  card.innerHTML = `
+    <div class="produk-info">
+      <img src="${getProdukImage(p.nama)}" class="produk-logo">
+      <div class="produk-info-text">
+        <div class="produk-header">
+          <h3 class="produk-title">${p.nama}</h3>
+          <span class="produk-status ${statusClass}">${statusText}</span>
+        </div>
+        <div class="produk-detail">
+          <span>Harga:</span>
+          <strong>Rp${p.harga.toLocaleString('id-ID')}</strong>
+        </div>
+        <div class="produk-detail">
+          <span>Profit/hari:</span>
+          <strong>Rp${p.profit_per_hari.toLocaleString('id-ID')}</strong>
+        </div>
+      </div>
+    </div>
+    <div class="hari-info" id="hari-${id}">Hari ke-${hariKe} | Sisa ${sisa} hari claim</div>
+    ${p.modal_kembali ? `<div style="font-size:12px;color:#00a8ff;margin-top:5px;">💡 Modal akan dikembalikan setelah kontrak selesai</div>` : ""}
+    <div class="claim-box">
+      <div class="claim-timer" id="timer-${id}">${disable ? 'Menghitung...' : 'Siap di-claim!'}</div>
+      <button class="claim-btn" data-id="${id}" ${disable || expired ? 'disabled' : ''}>
+        ${expired ? '<i class="fas fa-ban"></i> CLAIM BERAKHIR' : (disable ? '<i class="fas fa-check-circle"></i> PRODUK AKTIF' : '<i class="fas fa-hand-holding-usd"></i> CLAIM PROFIT')}
+      </button>
+      <div class="auto-claim-info">Profit akan diberikan otomatis setiap 24 jam</div>
+    </div>`;
+    
+  document.getElementById("produkList").appendChild(card);
+
+  const btn = card.querySelector(".claim-btn");
+  const timer = card.querySelector(`#timer-${id}`);
+  const infoHari = card.querySelector(`#hari-${id}`);
+
+  if (expired) return;
+  if (disable) startCountdown(last, btn, timer, infoHari, sisa, kontrak);
+  else btn.addEventListener("click", () => claimProfit(id, p.nama, p.profit_per_hari, hariKe, sisa, kontrak, p.modal_kembali, p.harga));
+  
+  // Cek profit otomatis
+  checkAutoProfit(id, p);
+}
+
+// ✅ Load Produk
+const r = ref(db, "produk_aktif/" + nohp);
+get(r).then(s => {
+  const c = document.getElementById("produkList");
+  if (!s.exists()) {
+    c.innerHTML = `<div class="empty-state"><p>Belum ada produk dibeli</p></div>`;
+    return;
+  }
+  c.innerHTML = "";
+  s.forEach(ch => renderProduk(ch.val(), ch.key));
+});
+
+// Membuat efek bintang
+function createStars() {
+  const starsContainer = document.createElement('div');
+  starsContainer.classList.add('stars');
+  starsContainer.id = 'stars';
+  
+  const starsCount = 150;
+  for (let i = 0; i < starsCount; i++) {
+    const star = document.createElement('div');
+    star.classList.add('star');
+    
+    const size = Math.random() * 3;
+    star.style.width = `${size}px`;
+    star.style.height = `${size}px`;
+    star.style.left = `${Math.random() * 100}%`;
+    star.style.top = `${Math.random() * 100}%`;
+    star.style.animationDelay = `${Math.random() * 5}s`;
+    star.style.animationDuration = `${3 + Math.random() * 5}s`;
+    
+    starsContainer.appendChild(star);
+  }
+  
+  document.body.appendChild(starsContainer);
+}
+
+createStars();
+
+// Real-time listener untuk produk aktif
+onValue(r, (snapshot) => {
+  const c = document.getElementById("produkList");
+  if (!snapshot.exists()) {
+    c.innerHTML = `<div class="empty-state"><p>Belum ada produk dibeli</p></div>`;
+    return;
+  }
+  c.innerHTML = "";
+  snapshot.forEach(ch => renderProduk(ch.val(), ch.key));
+});
+</script>
+
+</body>
+</html>

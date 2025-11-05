@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+  <title>Edit Rekening</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #121212;
+      color: #fff;
+      margin: 0;
+      padding: 20px;
+    }
+    h2 {
+      text-align: center;
+      color: #f5c518;
+      margin-bottom: 20px;
+    }
+    label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: bold;
+      color: #ffeb3b;
+    }
+    input, select {
+      width: 100%;
+      padding: 12px;
+      font-size: 16px;
+      margin-bottom: 15px;
+      border-radius: 8px;
+      border: 1px solid #999;
+      background: #2a2a2a;
+      color: #fff;
+    }
+    button {
+      width: 100%;
+      padding: 14px;
+      background: #f5c518;
+      color: #000;
+      font-weight: bold;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    .toast {
+      background: #00c853;
+      color: white;
+      padding: 12px;
+      text-align: center;
+      margin-top: 10px;
+      border-radius: 8px;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Edit Data Bank</h2>
+  <form id="formBank">
+    <label>Metode Penarikan</label>
+    <select id="metode" required>
+      <option value="">Pilih Metode</option>
+      <option>DANA</option>
+      <option>OVO</option>
+      <option>GOPAY</option>
+      <option>SHOPEE</option>
+      <option>SEA-BANK</option>
+      <option>PERMATA</option>
+      <option>BRI</option>
+      <option>MANDIRI</option>
+    </select>
+    <label>Nama Pemilik</label>
+    <input type="text" id="nama" required />
+    <label>No. Rekening / HP</label>
+    <input type="text" id="rekening" required />
+    <button type="submit">Simpan</button>
+    <div id="pesan" class="toast" style="display:none;">Tersimpan!</div>
+  </form>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+    import { getDatabase, ref, get, update } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyB_eFit5rt0-wOHMp30sw5rsOUzgU1jbQ8",
+      authDomain: "antamgrow.firebaseapp.com",
+      databaseURL: "https://antamgrow-default-rtdb.firebaseio.com",
+      projectId: "antamgrow",
+      storageBucket: "antamgrow.appspot.com",
+      messagingSenderId: "890745577643",
+      appId: "1:890745577643:web:e47aefbd6f1db50fa497ee"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+    const nohp = localStorage.getItem("nohp");
+
+    const metodeEl = document.getElementById("metode");
+    const namaEl = document.getElementById("nama");
+    const rekeningEl = document.getElementById("rekening");
+
+    // Ambil data bank jika sudah pernah disimpan
+    const userRef = ref(db, "users/" + nohp);
+    get(userRef).then((snap) => {
+      if (snap.exists()) {
+        const data = snap.val().bank;
+        if (data) {
+          metodeEl.value = data.metode || "";
+          namaEl.value = data.nama || "";
+          rekeningEl.value = data.rekening || "";
+        }
+      }
+    });
+
+    document.getElementById("formBank").addEventListener("submit", async function(e) {
+      e.preventDefault();
+
+      const bank = {
+        metode: metodeEl.value,
+        nama: namaEl.value.trim(),
+        rekening: rekeningEl.value.trim()
+      };
+
+      await update(userRef, { bank });
+      document.getElementById("pesan").style.display = "block";
+    });
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,509 @@
+<!DOCTYPE html>  
+<html lang="id">  
+<head>  
+  <meta charset="UTF-8" />  
+  <title>Panel Web Owner | AntamGrow</title>  
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">  
+  <style>  
+    :root {
+      --primary: #2196F3;
+      --primary-dark: #1976D2;
+      --secondary: #4CAF50;
+      --secondary-dark: #2E7D32;
+      --danger: #F44336;
+      --warning: #FF9800;
+      --light-bg: #f5f9ff;
+      --card-bg: #ffffff;
+      --text: #333333;
+      --text-light: #666666;
+      --border: #e0e0e0;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background-color: var(--light-bg);
+      color: var(--text);
+      padding: 20px;
+      line-height: 1.6;
+    }
+
+    h2 {
+      color: var(--primary);
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    h3 {
+      color: var(--primary-dark);
+      margin-bottom: 15px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid var(--primary);
+    }
+
+    .logout-admin {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background-color: var(--danger);
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .logout-admin:hover {
+      background-color: #d32f2f;
+    }
+
+    .tab {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 20px;
+      border-bottom: 2px solid var(--border);
+      padding-bottom: 10px;
+    }
+
+    .tab button {
+      padding: 10px 15px;
+      background-color: #f1f1f1;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: all 0.3s;
+    }
+
+    .tab button:hover {
+      background-color: #ddd;
+    }
+
+    .tab button.active {
+      background-color: var(--primary);
+      color: white;
+    }
+
+    .content {
+      display: none;
+      padding: 20px;
+      background-color: var(--card-bg);
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      margin-bottom: 20px;
+    }
+
+    .content.active {
+      display: block;
+      animation: fadeIn 0.5s;
+    }
+
+    button {
+      padding: 10px 15px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: all 0.3s;
+    }
+
+    button:hover {
+      opacity: 0.9;
+    }
+
+    .acc {
+      background-color: var(--secondary);
+      color: white;
+    }
+
+    .tolak {
+      background-color: var(--danger);
+      color: white;
+    }
+
+    .box {
+      background-color: #f9f9f9;
+      border-left: 4px solid var(--primary);
+      padding: 15px;
+      margin-bottom: 15px;
+      border-radius: 5px;
+    }
+
+    .box p {
+      margin-bottom: 10px;
+    }
+
+    .btns {
+      display: flex;
+      gap: 10px;
+      margin-top: 15px;
+    }
+
+    .processing {
+      opacity: 0.7;
+      pointer-events: none;
+    }
+
+    .success {
+      background-color: var(--secondary) !important;
+    }
+
+    .error {
+      background-color: var(--danger) !important;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes fadeOut {
+      from { opacity: 1; }
+      to { opacity: 0; }
+    }
+
+    @media (max-width: 768px) {
+      .tab {
+        flex-direction: column;
+      }
+      
+      .btns {
+        flex-direction: column;
+      }
+    }
+  </style>  
+</head>  
+<body>  
+<script>  
+if(localStorage.getItem("isAdmin")!=="true"){window.location.href="web-owner-login.html";}  
+</script>  
+
+<button onclick="logoutAdmin()" class="logout-admin">Logout</button>
+
+<h2>Panel Web Owner AntamGrow</h2>
+
+<div class="tab">  
+  <button id="btn-deposit" class="active">Deposit</button>  
+  <button id="btn-penarikan">Penarikan</button>  
+</div>  
+
+<div id="deposit-content" class="content active"></div>  
+<div id="penarikan-content" class="content"></div>  
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>  
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>  
+
+<script>  
+// Initialize Firebase  
+const firebaseConfig = {
+  apiKey: "AIzaSyAuJSxpcFZ1QI-dEsEnx2qSqlb0wsvs6Mc",
+  authDomain: "lginvest-776cf.firebaseapp.com",
+  databaseURL: "https://lginvest-776cf-default-rtdb.firebaseio.com",
+  projectId: "lginvest-776cf",
+  storageBucket: "lginvest-776cf.firebasestorage.app",
+  messagingSenderId: "831934282072",
+  appId: "1:831934282072:web:6a8b7a5bcba5d4d1264d2d",
+  measurementId: "G-265YF9DYCF"
+};
+  
+// Initialize Firebase  
+firebase.initializeApp(firebaseConfig);  
+const db = firebase.database();  
+  
+// 🔹 Tab Navigasi  
+const tabs = {  
+  "btn-deposit": "deposit-content",  
+  "btn-penarikan": "penarikan-content"
+};  
+  
+Object.keys(tabs).forEach(id => {  
+  document.getElementById(id).onclick = () => {  
+    document.querySelectorAll(".content").forEach(c => c.classList.remove("active"));  
+    document.querySelectorAll(".tab button").forEach(b => b.classList.remove("active"));  
+    document.getElementById(tabs[id]).classList.add("active");  
+    document.getElementById(id).classList.add("active");  
+      
+    if (id === "btn-deposit") {
+      loadPendingDeposits();
+    } else if (id === "btn-penarikan") {
+      loadPendingWithdrawals();
+    }
+  };  
+});  
+
+// ✅ Deposit dengan animasi dan feedback lebih baik  
+function loadPendingDeposits() {
+  firebase.database().ref('deposit').on('value', (snap) => {  
+    const c = document.getElementById('deposit-content');  
+    c.innerHTML = snap.exists() ? '' : '<p>Tidak ada deposit pending.</p>';  
+      
+    if (snap.exists()) {  
+      snap.forEach((user) => {  
+        user.forEach((trx) => {  
+          const d = trx.val();  
+          if (d.status !== 'pending') return;  
+            
+          const box = document.createElement('div');  
+          box.className = 'box';  
+          box.innerHTML = `  
+            <p><b>📱 User:</b> ${user.key}</p>  
+            <p><b>👤 Nama Pengirim:</b> ${d.pengirim || '-'}</p>  
+            <p><b>💰 Jumlah:</b> Rp${d.jumlah.toLocaleString()}</p>  
+            <p><b>🏦 Metode:</b> ${d.metode || '-'}</p>  
+            <p><b>📅 Waktu:</b> ${d.tanggal || new Date().toLocaleString("id-ID")}</p>  
+            <div class="btns">  
+              <button class="acc">ACC</button>  
+              <button class="tolak">TOLAK</button>  
+            </div>  
+          `;  
+            
+          const accBtn = box.querySelector('.acc');  
+          const tolakBtn = box.querySelector('.tolak');  
+            
+          accBtn.onclick = async () => {  
+            if (!confirm('Anda yakin ingin menyetujui deposit ini?')) return;  
+              
+            try {  
+              // Add processing state  
+              accBtn.disabled = true;  
+              tolakBtn.disabled = true;  
+              accBtn.classList.add('processing');  
+                
+              await firebase.database().ref(`deposit/${user.key}/${trx.key}`).update({ status: 'acc' });  
+              const userSnapshot = await firebase.database().ref(`users/${user.key}`).once('value');  
+              const userData = userSnapshot.val();  
+              const currentSaldo = userData.saldo || 0;  
+              const newSaldo = currentSaldo + d.jumlah;  
+                
+              // Update saldo user  
+              await firebase.database().ref(`users/${user.key}`).update({ saldo: newSaldo });  
+                
+              // Catat riwayat  
+              const riwayat = {  
+                jenis: 'deposit',  
+                aksi: 'acc',  
+                user: user.key,  
+                jumlah: d.jumlah,  
+                waktu: new Date().toISOString()  
+              };  
+              await firebase.database().ref('riwayat_admin').push(riwayat);  
+                
+              accBtn.classList.remove('processing');  
+              accBtn.classList.add('success');  
+              accBtn.textContent = '✓ Berhasil';  
+                
+              // Fade out the box  
+              box.style.animation = 'fadeOut 0.5s forwards';  
+              setTimeout(() => box.remove(), 500);  
+            } catch (error) {  
+              console.error("Error approving deposit:", error);  
+              accBtn.classList.remove('processing');  
+              accBtn.classList.add('error');  
+              accBtn.textContent = 'Gagal';  
+              setTimeout(() => {  
+                accBtn.classList.remove('error');  
+                accBtn.textContent = 'ACC';  
+                accBtn.disabled = false;  
+                tolakBtn.disabled = false;  
+              }, 1000);  
+              alert("Gagal menyetujui deposit: " + error.message);  
+              }  
+          };  
+            
+          tolakBtn.onclick = async () => {  
+            if (!confirm('Anda yakin ingin menolak deposit ini?')) return;  
+              
+            try {  
+              // Add processing state  
+              accBtn.disabled = true;  
+              tolakBtn.disabled = true;  
+              tolakBtn.classList.add('processing');  
+                
+              await firebase.database().ref(`deposit/${user.key}/${trx.key}`).update({ status: 'ditolak' });  
+                
+              // Catat riwayat  
+              const riwayat = {  
+                jenis: 'deposit',  
+                aksi: 'tolak',  
+                user: user.key,  
+                jumlah: d.jumlah,  
+                waktu: new Date().toISOString()  
+              };  
+              await firebase.database().ref('riwayat_admin').push(riwayat);  
+                
+              tolakBtn.classList.remove('processing');  
+              tolakBtn.classList.add('success');  
+              tolakBtn.textContent = '✓ Ditolak';  
+                
+              // Fade out the box  
+              box.style.animation = 'fadeOut 0.5s forwards';  
+              setTimeout(() => box.remove(), 500);  
+            } catch (error) {  
+              console.error("Error rejecting deposit:", error);  
+              tolakBtn.classList.remove('processing');  
+              tolakBtn.classList.add('error');  
+              tolakBtn.textContent = 'Gagal';  
+              setTimeout(() => {  
+                tolakBtn.classList.remove('error');  
+                tolakBtn.textContent = 'TOLAK';  
+                accBtn.disabled = false;  
+                tolakBtn.disabled = false;  
+              }, 1000);  
+              alert("Gagal menolak deposit: " + error.message);  
+            }  
+          };  
+            
+          c.appendChild(box);  
+        });  
+      });  
+    }  
+  });
+}
+
+// ✅ Penarikan dengan animasi dan feedback lebih baik  
+function loadPendingWithdrawals() {
+  firebase.database().ref('transaksi/penarikan').on('value', (snap) => {  
+    const c = document.getElementById('penarikan-content');  
+    c.innerHTML = snap.exists() ? '' : '<p>Tidak ada penarikan pending.</p>';  
+      
+    if (snap.exists()) {  
+      snap.forEach((user) => {  
+        user.forEach((trx) => {  
+          const d = trx.val();  
+          if (d.status !== 'pending') return;  
+            
+          const box = document.createElement('div');  
+          box.className = 'box';  
+          box.innerHTML = `  
+            <p><b>📱 No HP:</b> ${d.nohp}</p>  
+            <p><b>🏦 Metode:</b> ${d.metode}</p>  
+            <p><b>🔢 Rekening/E-Wallet:</b> ${d.rekening}</p>  
+            <p><b>👤 Nama Penerima:</b> ${d.nama}</p>  
+            <p><b>💰 Jumlah Tarik:</b> Rp${d.jumlah.toLocaleString()}</p>  
+            <p><b>✂️ Potongan:</b> Rp${(d.potongan || 0).toLocaleString()}</p>  
+            <p><b>📥 Total Terima:</b> Rp${(d.total_terima || 0).toLocaleString()}</p>  
+            <p><b>📅 Waktu:</b> ${new Date(d.waktu || Date.now()).toLocaleString("id-ID")}</p>  
+            <div class="btns">  
+              <button class="acc">ACC</button>  
+              <button class="tolak">TOLAK</button>  
+            </div>  
+          `;  
+            
+          const accBtn = box.querySelector('.acc');  
+          const tolakBtn = box.querySelector('.tolak');  
+            
+          accBtn.onclick = async () => {  
+            if (!confirm('Anda yakin ingin menyetujui penarikan ini?')) return;  
+              
+      try {  
+        // Add processing state  
+        accBtn.disabled = true;  
+        tolakBtn.disabled = true;  
+        accBtn.classList.add('processing');  
+          
+        await firebase.database().ref(`transaksi/penarikan/${user.key}/${trx.key}`).update({ status: 'acc' });  
+          
+        // Catat riwayat  
+        const riwayat = {  
+          jenis: 'penarikan',  
+          aksi: 'acc',  
+          user: d.nohp,  
+          jumlah: d.jumlah,  
+          waktu: new Date().toISOString()  
+        };  
+        await firebase.database().ref('riwayat_admin').push(riwayat);  
+          
+        accBtn.classList.remove('processing');  
+        accBtn.classList.add('success');  
+        accBtn.textContent = '✓ Berhasil';  
+          
+        // Fade out the box  
+        box.style.animation = 'fadeOut 0.5s forwards';  
+        setTimeout(() => box.remove(), 500);  
+      } catch (error) {  
+        console.error("Error approving withdrawal:", error);  
+        accBtn.classList.remove('processing');  
+        accBtn.classList.add('error');  
+        accBtn.textContent = 'Gagal';  
+        setTimeout(() => {  
+          accBtn.classList.remove('error');  
+          accBtn.textContent = 'ACC';  
+          accBtn.disabled = false;  
+          tolakBtn.disabled = false;  
+        }, 1000);  
+        alert("Gagal menyetujui penarikan: " + error.message);  
+      }  
+    };  
+      
+    tolakBtn.onclick = async () => {  
+      if (!confirm('Anda yakin ingin menolak penarikan ini?')) return;  
+        
+      try {  
+        // Add processing state  
+        accBtn.disabled = true;  
+        tolakBtn.disabled = true;  
+        tolakBtn.classList.add('processing');  
+          
+        await firebase.database().ref(`transaksi/penarikan/${user.key}/${trx.key}`).update({ status: 'ditolak' });  
+        const s = await firebase.database().ref(`users/${d.nohp}/saldo`).once('value');  
+        await firebase.database().ref(`users/${d.nohp}`).update({ saldo: (s.val() || 0) + d.jumlah });  
+          
+        // Catat riwayat  
+        const riwayat = {  
+          jenis: 'penarikan',  
+          aksi: 'tolak',  
+          user: d.nohp,  
+          jumlah: d.jumlah,  
+          waktu: new Date().toISOString()  
+        };  
+        await firebase.database().ref('riwayat_admin').push(riwayat);  
+          
+        tolakBtn.classList.remove('processing');  
+        tolakBtn.classList.add('success');  
+        tolakBtn.textContent = '✓ Ditolak';  
+          
+        // Fade out the box  
+        box.style.animation = 'fadeOut 0.5s forwards';  
+        setTimeout(() => box.remove(), 500);  
+      } catch (error) {  
+        console.error("Error rejecting withdrawal:", error);  
+        tolakBtn.classList.remove('processing');  
+        tolakBtn.classList.add('error');  
+        tolakBtn.textContent = 'Gagal';  
+        setTimeout(() => {  
+          tolakBtn.classList.remove('error');  
+          tolakBtn.textContent = 'TOLAK';  
+          accBtn.disabled = false;  
+          tolakBtn.disabled = false;  
+        }, 1000);  
+        alert("Gagal menolak penarikan: " + error.message);  
+      }  
+    };  
+      
+    c.appendChild(box);  
+    });  
+  });  
+}  
+});
+}
+
+// Load initial data
+loadPendingDeposits();
+loadPendingWithdrawals();
+  
+// Logout function  
+window.logoutAdmin = function() {  
+  localStorage.removeItem("isAdmin");  
+  window.location.href = "web-owner-login.html";  
+};  
+</script>  
+
+</body>  
+</html>

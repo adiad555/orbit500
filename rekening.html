@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+  <title>Simpan Rekening | OrbitSatellite</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+    body {
+      background: #0a0e17;
+      color: #e0f7ff;
+      padding-bottom: 80px;
+      background-image: 
+        radial-gradient(circle at 20% 30%, rgba(0, 168, 255, 0.15) 0%, transparent 40%),
+        radial-gradient(circle at 80% 70%, rgba(100, 255, 218, 0.15) 0%, transparent 40%);
+      position: relative;
+      overflow-x: hidden;
+    }
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: 
+        radial-gradient(circle at 20% 30%, rgba(0, 168, 255, 0.1) 0%, transparent 20%),
+        radial-gradient(circle at 80% 70%, rgba(100, 255, 218, 0.1) 0%, transparent 20%),
+        radial-gradient(circle at 40% 80%, rgba(108, 92, 231, 0.1) 0%, transparent 20%);
+      z-index: -1;
+    }
+    header {
+      background: linear-gradient(135deg, #0a0e17 0%, #1a283f 100%);
+      color: #64ffda;
+      padding: 20px 16px;
+      text-align: center;
+      font-size: 20px;
+      font-weight: 600;
+      position: relative;
+      border-bottom: 1px solid rgba(100, 255, 218, 0.2);
+    }
+    header::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: linear-gradient(90deg, #00a8ff 0%, #64ffda 100%);
+    }
+    .planet {
+      position: absolute;
+      border-radius: 50%;
+      z-index: -1;
+      opacity: 0.6;
+      filter: blur(1px);
+    }
+    .planet-1 {
+      width: 120px;
+      height: 120px;
+      background: radial-gradient(circle at 30% 30%, #6c5ce7, #0a0e17 70%);
+      top: 15%;
+      left: 10%;
+      box-shadow: 0 0 30px rgba(108, 92, 231, 0.4);
+    }
+    .planet-2 {
+      width: 80px;
+      height: 80px;
+      background: radial-gradient(circle at 30% 30%, #00a8ff, #0a0e17 70%);
+      top: 65%;
+      right: 10%;
+      box-shadow: 0 0 20px rgba(0, 168, 255, 0.4);
+    }
+    .satellite {
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      background: #64ffda;
+      border-radius: 50%;
+      box-shadow: 0 0 15px #64ffda;
+      animation: orbit 15s linear infinite;
+      z-index: -1;
+    }
+    @keyframes orbit {
+      0% { transform: rotate(0deg) translateX(60px) rotate(0deg); }
+      100% { transform: rotate(360deg) translateX(60px) rotate(-360deg); }
+    }
+    .container {
+      background: rgba(18, 25, 40, 0.9);
+      margin: 20px 16px;
+      padding: 25px;
+      border-radius: 16px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+      border: 1px solid rgba(100, 255, 218, 0.1);
+      backdrop-filter: blur(10px);
+      position: relative;
+      overflow: hidden;
+    }
+    .container::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: linear-gradient(90deg, #00a8ff, #64ffda);
+    }
+    h2 {
+      text-align: center;
+      color: #64ffda;
+      margin-bottom: 25px;
+      font-size: 20px;
+      font-weight: 600;
+      text-shadow: 0 0 10px rgba(100, 255, 218, 0.5);
+    }
+    label {
+      font-weight: 500;
+      font-size: 14px;
+      display: block;
+      margin-bottom: 8px;
+      color: #00a8ff;
+    }
+    input, select {
+      width: 100%;
+      padding: 14px 16px;
+      font-size: 15px;
+      margin-bottom: 20px;
+      border-radius: 10px;
+      border: 1px solid rgba(100, 255, 218, 0.2);
+      background: rgba(10, 14, 23, 0.7);
+      color: #e0f7ff;
+      transition: all 0.3s;
+    }
+    input:focus, select:focus {
+      outline: none;
+      border-color: #00a8ff;
+      box-shadow: 0 0 0 3px rgba(0, 168, 255, 0.3);
+    }
+    input:read-only {
+      background: rgba(10, 14, 23, 0.5);
+      color: #a0aec0;
+    }
+    button {
+      width: 100%;
+      padding: 16px;
+      background: linear-gradient(to right, #00a8ff, #64ffda);
+      color: #0a0e17;
+      font-weight: 600;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 16px;
+      margin-top: 10px;
+      transition: all 0.3s;
+      box-shadow: 0 4px 15px rgba(0, 168, 255, 0.3);
+    }
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0, 168, 255, 0.4);
+    }
+    button:active {
+      transform: translateY(0);
+    }
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 70px;
+      background: rgba(18, 25, 40, 0.95);
+      border-top: 1px solid rgba(100, 255, 218, 0.2);
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      z-index: 999;
+      box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+      backdrop-filter: blur(10px);
+    }
+    .bottom-nav a {
+      text-decoration: none;
+      color: #a0aec0;
+      font-size: 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      flex: 1;
+      padding: 8px 0;
+      transition: all 0.3s;
+    }
+    .bottom-nav a.active {
+      color: #64ffda;
+      font-weight: 600;
+    }
+    .bottom-nav i {
+      font-size: 22px;
+      margin-bottom: 4px;
+    }
+    .bottom-nav a.active i {
+      color: #64ffda;
+    }
+    .toast {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(18, 25, 40, 0.95);
+      color: #ff6b6b;
+      padding: 14px 24px;
+      border-radius: 10px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+      font-weight: 500;
+      z-index: 9999;
+      animation: fadein 0.5s, fadeout 0.5s 2.5s;
+      border: 1px solid rgba(255, 107, 107, 0.3);
+      backdrop-filter: blur(10px);
+      text-align: center;
+      max-width: 90%;
+    }
+    .toast.success {
+      color: #64ffda;
+      border: 1px solid rgba(100, 255, 218, 0.3);
+    }
+    @keyframes fadein {
+      from { opacity: 0; top: 0; }
+      to { opacity: 1; top: 20px; }
+    }
+    @keyframes fadeout {
+      from { opacity: 1; top: 20px; }
+      to { opacity: 0; top: 0; }
+    }
+    .info-text {
+      font-size: 13px;
+      color: #a0aec0;
+      text-align: center;
+      margin-top: 20px;
+      line-height: 1.5;
+    }
+    .info-text strong {
+      color: #ff6b6b;
+    }
+  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+
+  <!-- Planet dan Satellite Elements -->
+  <div class="planet planet-1"></div>
+  <div class="planet planet-2"></div>
+  <div class="satellite" style="top: 25%; left: 15%;"></div>
+  <div class="satellite" style="top: 75%; right: 15%; animation-delay: -7s;"></div>
+
+  <header>
+    <div>ORBIT SATELLITE</div>
+    <div>SIMPAN REKENING</div>
+  </header>
+
+  <div class="container">
+    <h2>FORM SIMPAN REKENING</h2>
+    <form id="rekeningForm">
+      <label>Nama Bank / E-Wallet</label>
+      <select id="bank" required>
+        <option value="">Pilih Bank/E-Wallet</option>
+        <option>DANA</option>
+        <option>OVO</option>
+        <option>GOPAY</option>
+        <option>SHOPEEPAY</option>
+        <option>BRI</option>
+        <option>BCA</option>
+        <option>MANDIRI</option>
+        <option>PERMATA</option>
+        <option>BNI</option>
+      </select>
+
+      <label>Nama Pemilik Rekening</label>
+      <input type="text" id="nama" placeholder="Nama sesuai rekening" readonly />
+
+      <label>Nomor Rekening / HP</label>
+      <input type="text" id="norek" placeholder="Masukkan nomor rekening" required/>
+
+      <button type="submit"><i class="fas fa-save"></i> SIMPAN REKENING</button>
+      
+      <div class="info-text">
+        <strong>Penting:</strong> Setiap rekening hanya dapat digunakan untuk 1 akun.<br>
+        Jika sudah pernah menyimpan rekening, tidak dapat diubah.
+      </div>
+    </form>
+  </div>
+
+  <div class="bottom-nav">
+    <a href="dashboard.html"><i class="fas fa-home"></i>Home</a>
+    <a href="produk.html"><i class="fas fa-shopping-bag"></i>Produk</a>
+    <a href="riwayat.html"><i class="fas fa-history"></i>Riwayat</a>
+    <a href="profil.html" class="active"><i class="fas fa-user"></i>Profil</a>
+  </div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+  import { getDatabase, ref, set, get } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyAuJSxpcFZ1QI-dEsEnx2qSqlb0wsvs6Mc",
+    authDomain: "lginvest-776cf.firebaseapp.com",
+    databaseURL: "https://lginvest-776cf-default-rtdb.firebaseio.com",
+    projectId: "lginvest-776cf",
+    storageBucket: "lginvest-776cf.firebasestorage.app",
+    messagingSenderId: "831934282072",
+    appId: "1:831934282072:web:6a8b7a5bcba5d4d1264d2d",
+    measurementId: "G-265YF9DYCF"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getDatabase(app);
+  const nohp = localStorage.getItem("nohp");
+
+  // Jika tidak ada nomor HP, redirect ke login
+  if (!nohp) {
+    window.location.href = "index.html";
+  }
+
+  const bankSelect = document.getElementById("bank");
+  const namaInput = document.getElementById("nama");
+  const norekInput = document.getElementById("norek");
+
+  function showToast(msg, isSuccess = false){
+    const toast = document.createElement("div");
+    toast.className = isSuccess ? "toast success" : "toast";
+    toast.innerHTML = `<i class="${isSuccess ? 'fas fa-check-circle' : 'fas fa-exclamation-circle'}"></i> ${msg}`;
+    document.body.appendChild(toast);
+    setTimeout(() => toast.remove(), 3000);
+  }
+
+  // ✅ Ambil nama dari data user (users/<nohp>)
+  const userRef = ref(db, "users/" + nohp);
+  get(userRef).then(snap => {
+    if (snap.exists()) {
+      const data = snap.val();
+      namaInput.value = data.nama_lengkap || data.nama || "-";
+    }
+  });
+
+  // ✅ Auto-load rekening user jika sudah ada
+  const rekeningRef = ref(db, "rekening/" + nohp);
+  get(rekeningRef).then(snapshot => {
+    if (snapshot.exists()) {
+      const data = snapshot.val();
+      bankSelect.value = data.bank || "";
+      norekInput.value = data.norek || "";
+      
+      // Nonaktifkan form jika sudah ada rekening
+      bankSelect.disabled = true;
+      norekInput.disabled = true;
+      document.querySelector('button[type="submit"]').disabled = true;
+      document.querySelector('button[type="submit"]').innerHTML = '<i class="fas fa-lock"></i> REKENING SUDAH TERSIMPAN';
+      document.querySelector('button[type="submit"]').style.background = 'linear-gradient(to right, #6c5ce7, #a29bfe)';
+      
+      showToast("Rekening sudah tersimpan dan tidak dapat diubah", true);
+    }
+  });
+
+  // ✅ Simpan rekening (nama tetap dari user, tidak bisa diubah)
+  document.getElementById("rekeningForm").addEventListener("submit", async(e) => {
+    e.preventDefault();
+    const bank = bankSelect.value;
+    const nama = namaInput.value.trim();
+    const norek = norekInput.value.trim();
+
+    if (!bank || !norek) {
+      showToast("Lengkapi semua data");
+      return;
+    }
+
+    // ✅ Cek jika akun sudah punya rekening
+    const userRek = await get(rekeningRef);
+    if (userRek.exists()) {
+      showToast("Anda sudah memiliki rekening yang tersimpan");
+      return;
+    }
+
+    // ✅ Cek nomor rekening unik (1 rekening hanya untuk 1 akun)
+    const allRek = await get(ref(db, "rekening"));
+    if (allRek.exists()) {
+      const all = allRek.val();
+      for (const uid in all) {
+        if (all[uid].norek === norek) {
+          showToast("Nomor rekening ini sudah terdaftar di akun lain");
+          return;
+        }
+      }
+    }
+
+    // Simpan ke database
+    await set(rekeningRef, { bank, nama, norek });
+    showToast("Rekening berhasil disimpan", true);
+    setTimeout(() => window.location.href = "profil.html", 1500);
+  });
+</script>
+
+</body>
+</html>

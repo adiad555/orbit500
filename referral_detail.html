@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+  <title>Detail Referral | Orbit Satelite</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    :root {
+      --space-dark: #0a0e17;
+      --space-blue: #122445;
+      --orbit-blue: #1a3b7a;
+      --satellite-gold: #ffcc00;
+      --tech-cyan: #00ccff;
+      --star-white: #e6f1ff;
+      --card-shadow: 0 4px 20px rgba(0, 204, 255, 0.15);
+      --glow-effect: 0 0 10px rgba(0, 204, 255, 0.5);
+    }
+
+    body {
+      background: linear-gradient(135deg, var(--space-dark) 0%, var(--space-blue) 100%);
+      color: var(--star-white);
+      padding-bottom: 70px;
+      min-height: 100vh;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* Background stars effect - optimized */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: 
+        radial-gradient(2px 2px at 20px 30px, #eee, rgba(0,0,0,0)),
+        radial-gradient(2px 2px at 40px 70px, #fff, rgba(0,0,0,0)),
+        radial-gradient(1px 1px at 90px 40px, #fff, rgba(0,0,0,0)),
+        radial-gradient(1px 1px at 130px 80px, #eee, rgba(0,0,0,0)),
+        radial-gradient(2px 2px at 160px 30px, #ddd, rgba(0,0,0,0)),
+        radial-gradient(1px 1px at 210px 70px, #fff, rgba(0,0,0,0));
+      background-repeat: repeat;
+      background-size: 250px 250px;
+      z-index: -1;
+      opacity: 0.3;
+      animation: starsAnimation 120s linear infinite;
+    }
+
+    @keyframes starsAnimation {
+      from { transform: translateY(0); }
+      to { transform: translateY(-250px); }
+    }
+
+    /* Orbit circles */
+    .orbit-circle {
+      position: fixed;
+      border-radius: 50%;
+      border: 1px solid rgba(0, 204, 255, 0.2);
+      z-index: -1;
+    }
+
+    .orbit-1 {
+      width: 300px;
+      height: 300px;
+      top: -150px;
+      right: -150px;
+    }
+
+    .orbit-2 {
+      width: 500px;
+      height: 500px;
+      bottom: -250px;
+      left: -250px;
+    }
+
+    .orbit-3 {
+      width: 200px;
+      height: 200px;
+      bottom: 100px;
+      right: 50px;
+    }
+
+    /* Satellite icon animation */
+    .satellite {
+      position: fixed;
+      font-size: 24px;
+      color: var(--satellite-gold);
+      z-index: -1;
+      animation: orbit 20s linear infinite;
+      will-change: transform;
+    }
+
+    @keyframes orbit {
+      from { transform: rotate(0deg) translateX(150px) rotate(0deg); }
+      to { transform: rotate(360deg) translateX(150px) rotate(-360deg); }
+    }
+
+    header {
+      background: rgba(10, 14, 23, 0.8);
+      backdrop-filter: blur(10px);
+      color: var(--star-white);
+      padding: 16px;
+      text-align: center;
+      position: relative;
+      box-shadow: 0 2px 15px rgba(0, 0, 0, 0.3);
+      border-bottom: 1px solid rgba(0, 204, 255, 0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .back-btn {
+      position: absolute;
+      left: 16px;
+      color: var(--tech-cyan);
+      font-size: 20px;
+      text-decoration: none;
+      z-index: 10;
+    }
+
+    .logo-header {
+      height: 40px;
+      filter: brightness(0) invert(1);
+    }
+
+    header div {
+      font-weight: 600;
+      font-size: 18px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .level-header {
+      background: rgba(26, 59, 122, 0.6);
+      backdrop-filter: blur(10px);
+      border-radius: 12px;
+      padding: 16px;
+      margin: 16px;
+      box-shadow: var(--card-shadow);
+      border: 1px solid rgba(0, 204, 255, 0.1);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .level-title {
+      font-weight: 600;
+      color: var(--tech-cyan);
+      font-size: 18px;
+    }
+
+    .level-percent {
+      background: rgba(0, 204, 255, 0.2);
+      color: var(--tech-cyan);
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .summary-cards {
+      display: flex;
+      gap: 12px;
+      margin: 16px;
+      overflow-x: auto;
+      padding-bottom: 8px;
+      scrollbar-width: none; /* Firefox */
+    }
+
+    .summary-cards::-webkit-scrollbar {
+      display: none; /* Chrome, Safari, Edge */
+    }
+
+    .summary-card {
+      background: rgba(26, 59, 122, 0.6);
+      backdrop-filter: blur(10px);
+      border-radius: 12px;
+      padding: 16px;
+      box-shadow: var(--card-shadow);
+      text-align: center;
+      border: 1px solid rgba(0, 204, 255, 0.1);
+      min-width: 120px;
+      flex: 1;
+    }
+
+    .summary-card h3 {
+      font-size: 12px;
+      color: var(--tech-cyan);
+      margin-bottom: 8px;
+    }
+
+    .summary-card p {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--satellite-gold);
+    }
+
+    #memberListContainer {
+      margin: 16px;
+    }
+
+    .loading {
+      display: flex;
+      justify-content: center;
+      padding: 40px 0;
+    }
+
+    .spinner {
+      width: 40px;
+      height: 40px;
+      border: 4px solid rgba(0, 204, 255, 0.3);
+      border-radius: 50%;
+      border-top-color: var(--tech-cyan);
+      animation: spin 1s ease-in-out infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--tech-cyan);
+      font-style: italic;
+    }
+
+    .error-state {
+      text-align: center;
+      padding: 40px 20px;
+      color: #ff6b6b;
+    }
+
+    .error-state button {
+      background: var(--tech-cyan);
+      color: var(--space-dark);
+      border: none;
+      padding: 10px 20px;
+      border-radius: 20px;
+      margin-top: 15px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .member-list {
+      list-style: none;
+      background: rgba(26, 59, 122, 0.6);
+      backdrop-filter: blur(10px);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: var(--card-shadow);
+      border: 1px solid rgba(0, 204, 255, 0.1);
+    }
+
+    .member-list li {
+      display: flex;
+      justify-content: space-between;
+      padding: 16px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .member-list li:last-child {
+      border-bottom: none;
+    }
+
+    .member-info {
+      flex: 1;
+    }
+
+    .member-name {
+      font-weight: 600;
+      margin-bottom: 4px;
+      color: var(--star-white);
+    }
+
+    .member-date {
+      font-size: 12px;
+      color: var(--tech-cyan);
+      margin-bottom: 4px;
+    }
+
+    .member-product {
+      font-size: 13px;
+      color: var(--star-white);
+      opacity: 0.8;
+    }
+
+    .member-amount {
+      text-align: right;
+    }
+
+    .member-amount .member-product {
+      font-size: 12px;
+      margin-top: 4px;
+      color: var(--satellite-gold);
+    }
+
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(10, 14, 23, 0.9);
+      backdrop-filter: blur(10px);
+      display: flex;
+      justify-content: space-around;
+      padding: 10px 0;
+      box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.3);
+      z-index: 100;
+      border-top: 1px solid rgba(0, 204, 255, 0.2);
+    }
+
+    .bottom-nav a {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-decoration: none;
+      color: var(--tech-cyan);
+      font-size: 12px;
+      transition: all 0.3s;
+      flex: 1;
+      max-width: 20%;
+    }
+
+    .bottom-nav a i {
+      font-size: 20px;
+      margin-bottom: 4px;
+    }
+
+    .bottom-nav a.active {
+      color: var(--satellite-gold);
+      transform: translateY(-5px);
+    }
+
+    .bottom-nav a.active i {
+      text-shadow: 0 0 10px var(--satellite-gold);
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 480px) {
+      .summary-card {
+        min-width: 110px;
+        padding: 12px;
+      }
+      
+      .summary-card p {
+        font-size: 16px;
+      }
+      
+      .member-list li {
+        flex-direction: column;
+      }
+      
+      .member-amount {
+        text-align: left;
+        margin-top: 10px;
+      }
+    }
+  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+  <!-- Orbit circles -->
+  <div class="orbit-circle orbit-1"></div>
+  <div class="orbit-circle orbit-2"></div>
+  <div class="orbit-circle orbit-3"></div>
+  
+  <!-- Satellite animation -->
+  <div class="satellite" style="top: 20%; left: 20%">
+    <i class="fas fa-satellite"></i>
+  </div>
+
+  <header>
+    <a href="team.html" class="back-btn"><i class="fas fa-arrow-left"></i></a>
+    <img src="https://iili.io/Fjqxb49.png" alt="Orbit Satelite Logo" class="logo-header">
+    <div>DETAIL REFERRAL</div>
+  </header>
+
+  <div class="level-header">
+    <div class="level-title" id="detailLevelTitle">Level 1</div>
+    <div class="level-percent" id="detailLevelPercent">25% Komisi</div>
+  </div>
+
+  <div class="summary-cards">
+    <div class="summary-card">
+      <h3>Total Komisi</h3>
+      <p id="detailTotalKomisi">Rp0</p>
+    </div>
+    <div class="summary-card">
+      <h3>Total Referral</h3>
+      <p id="detailTotalReferral">0</p>
+    </div>
+    <div class="summary-card">
+      <h3>Produk Terjual</h3>
+      <p id="detailTotalProduct">0</p>
+    </div>
+  </div>
+
+  <div id="memberListContainer">
+    <div class="loading">
+      <div class="spinner"></div>
+    </div>
+  </div>
+
+  <div class="bottom-nav">
+    <a href="dashboard.html"><i class="fas fa-home"></i>Home</a>
+    <a href="produk.html"><i class="fas fa-shopping-bag"></i>Produk</a>
+    <a href="riwayat.html"><i class="fas fa-history"></i>Riwayat</a>
+    <a href="team.html" class="active"><i class="fas fa-users"></i>Team</a>
+    <a href="profil.html"><i class="fas fa-user"></i>Profil</a>
+  </div>
+
+  <script type="module">
+    // Import the functions you need from the SDKs you need
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+    import { getDatabase, ref, get, onValue } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js";
+
+    // Your web app's Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyAuJSxpcFZ1QI-dEsEnx2qSqlb0wsvs6Mc",
+      authDomain: "lginvest-776cf.firebaseapp.com",
+      databaseURL: "https://lginvest-776cf-default-rtdb.firebaseio.com",
+      projectId: "lginvest-776cf",
+      storageBucket: "lginvest-776cf.firebasestorage.app",
+      messagingSenderId: "831934282072",
+      appId: "1:831934282072:web:6a8b7a5bcba5d4d1264d2d",
+      measurementId: "G-265YF9DYCF"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+    // Get level from URL parameter
+    const urlParams = new URLSearchParams(window.location.search);
+    const level = parseInt(urlParams.get('level')) || 1;
+
+    // Set level title and percentage
+    document.getElementById('detailLevelTitle').textContent = `Level ${level}`;
+    document.getElementById('detailLevelPercent').textContent = 
+      `${level === 1 ? 25 : level === 2 ? 2 : 1}% Komisi`;
+
+    // Pengecekan session
+    const nohp = localStorage.getItem("nohp") || sessionStorage.getItem("nohp");
+    if (!nohp || nohp === "null" || nohp === "undefined") {
+      alert("Sesi telah habis, silakan login kembali");
+      window.location.href = "index.html";
+    }
+
+    // Format mata uang
+    function formatCurrency(amount) {
+      return "Rp" + Number(amount).toLocaleString("id-ID");
+    }
+
+    // Format tanggal
+    function formatDate(dateString) {
+      if (!dateString) return '-';
+      const options = { day: 'numeric', month: 'short', year: 'numeric' };
+      return new Date(dateString).toLocaleDateString('id-ID', options);
+    }
+
+    // Hitung komisi berdasarkan level
+    function calculateKomisi(amount, level) {
+      let persen = level === 1 ? 25 : level === 2 ? 2 : 1;
+      return ((amount || 0) * persen / 100);
+    }
+
+    // Menampilkan error
+    function showError(message) {
+      const container = document.getElementById('memberListContainer');
+      container.innerHTML = `
+        <div class="error-state">
+          <i class="fas fa-exclamation-circle" style="font-size: 48px; margin-bottom: 15px;"></i>
+          <p>${message}</p>
+          <button onclick="window.location.reload()">Coba Lagi</button>
+        </div>
+      `;
+    }
+
+    // Memuat data team detail
+    async function loadTeamDetail() {
+      const container = document.getElementById('memberListContainer');
+      
+      try {
+        const snapshot = await get(ref(db, "users"));
+        if (!snapshot.exists()) {
+          container.innerHTML = '<div class="empty-state">Tidak ada data pengguna</div>';
+          return;
+        }
+        
+        const users = snapshot.val();
+        const myRef = users[nohp]?.referral;
+        
+        if (!myRef) {
+          container.innerHTML = '<div class="empty-state">Referral tidak ditemukan</div>';
+          return;
+        }
+
+        const members = [];
+        let totalKomisi = 0;
+        let totalReferral = 0;
+        let totalProduct = 0;
+
+        for (let key in users) {
+          const user = users[key];
+          if (!user || key === nohp) continue;
+          
+          const upline1 = user.upline;
+          const upline2 = upline1 && users[upline1] ? users[upline1].upline : null;
+          const upline3 = upline2 && users[upline2] ? users[upline2].upline : null;
+
+          const ref1 = upline1 && users[upline1] ? users[upline1].referral : null;
+          const ref2 = upline2 && users[upline2] ? users[upline2].referral : null;
+          const ref3 = upline3 && users[upline3] ? users[upline3].referral : null;
+
+          let isMyTeam = false;
+          if (level === 1 && ref1 === myRef) isMyTeam = true;
+          if (level === 2 && ref2 === myRef) isMyTeam = true;
+          if (level === 3 && ref3 === myRef) isMyTeam = true;
+
+          if (isMyTeam && user.first_product) {
+            const komisi = calculateKomisi(user.first_product, level);
+            totalKomisi += komisi;
+            totalReferral++;
+            totalProduct += user.first_product;
+            
+            members.push({
+              name: user.nama || user.nohp || key,
+              date: user.join_date,
+              product: user.first_product_name || 'Produk Pertama',
+              amount: user.first_product,
+              komisi: komisi
+            });
+          }
+        }
+
+        // Update summary
+        document.getElementById('detailTotalKomisi').textContent = formatCurrency(totalKomisi);
+        document.getElementById('detailTotalReferral').textContent = totalReferral;
+        document.getElementById('detailTotalProduct').textContent = formatCurrency(totalProduct);
+
+        // Render member list
+        if (members.length === 0) {
+          container.innerHTML = '<div class="empty-state">Belum ada anggota di level ini</div>';
+          return;
+        }
+
+        // Sort by date (newest first)
+        members.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+        const listHTML = `
+          <ul class="member-list">
+            ${members.map(member => `
+              <li>
+                <div class="member-info">
+                  <div class="member-name">${member.name}</div>
+                  <div class="member-date">${formatDate(member.date)}</div>
+                  <div class="member-product">${member.product}</div>
+                </div>
+                <div class="member-amount">
+                  ${formatCurrency(member.komisi)}
+                  <div class="member-product">${formatCurrency(member.amount)}</div>
+                </div>
+              </li>
+            `).join('')}
+          </ul>
+        `;
+
+        container.innerHTML = listHTML;
+      } catch (error) {
+        console.error("Error loading team details:", error);
+        showError("Terjadi kesalahan saat memuat data. Pastikan koneksi internet Anda stabil.");
+      }
+    }
+
+    // Inisialisasi
+    loadTeamDetail();
+    
+    // Real-time updates
+    onValue(ref(db, "users"), () => {
+      loadTeamDetail();
+    }, (error) => {
+      console.error("Firebase real-time error:", error);
+      showError("Gagal terhubung ke server. Silakan coba lagi.");
+    });
+  </script>
+</body>
+</html>

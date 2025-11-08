@@ -1,0 +1,1355 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Apple Invest - Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    :root {
+      --primary: #007AFF;
+      --primary-light: #5AC8FA;
+      --secondary: #FF2D55;
+      --accent: #32D74B;
+      --bg: #000000;
+      --card: #1C1C1E;
+      --card-light: #2C2C2E;
+      --text: #FFFFFF;
+      --text-muted: #8E8E93;
+      --border: #38383A;
+      --gold: #FFD700;
+      --purple: #BF5AF2;
+      --gradient-primary: linear-gradient(135deg, #007AFF, #5AC8FA);
+      --gradient-secondary: linear-gradient(135deg, #FF2D55, #FF6B8B);
+      --gradient-accent: linear-gradient(135deg, #32D74B, #64D2FF);
+      --gradient-gold: linear-gradient(135deg, #FFD700, #FF9500);
+      --gradient-purple: linear-gradient(135deg, #BF5AF2, #AC8EF9);
+      --gradient-dark: linear-gradient(135deg, #1C1C1E, #2C2C2E);
+      --gradient-apple: linear-gradient(135deg, #000000, #1C1C1E);
+      --shadow-sm: 0 2px 8px rgba(0,0,0,0.3);
+      --shadow-md: 0 4px 12px rgba(0,0,0,0.4);
+      --shadow-lg: 0 8px 24px rgba(0,0,0,0.5);
+      --shadow-apple: 0 10px 30px rgba(0,0,0,0.7);
+    }
+    
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      overflow-x: hidden;
+      -webkit-tap-highlight-color: transparent;
+    }
+    
+    /* Animated Background */
+    .bg-animation {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      overflow: hidden;
+    }
+    
+    .bg-circle {
+      position: absolute;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0) 70%);
+      filter: blur(40px);
+      animation: float 20s infinite linear;
+    }
+    
+    .bg-circle:nth-child(1) {
+      width: 300px;
+      height: 300px;
+      top: 10%;
+      left: 5%;
+      background: radial-gradient(circle, rgba(0, 122, 255, 0.1) 0%, rgba(0, 122, 255, 0) 70%);
+      animation-delay: 0s;
+    }
+    
+    .bg-circle:nth-child(2) {
+      width: 400px;
+      height: 400px;
+      top: 60%;
+      left: 80%;
+      background: radial-gradient(circle, rgba(255, 45, 85, 0.1) 0%, rgba(255, 45, 85, 0) 70%);
+      animation-delay: -5s;
+    }
+    
+    .bg-circle:nth-child(3) {
+      width: 250px;
+      height: 250px;
+      top: 30%;
+      left: 70%;
+      background: radial-gradient(circle, rgba(52, 199, 89, 0.1) 0%, rgba(52, 199, 89, 0) 70%);
+      animation-delay: -10s;
+    }
+    
+    @keyframes float {
+      0% {
+        transform: translate(0, 0) rotate(0deg);
+      }
+      25% {
+        transform: translate(20px, 20px) rotate(90deg);
+      }
+      50% {
+        transform: translate(0, 40px) rotate(180deg);
+      }
+      75% {
+        transform: translate(-20px, 20px) rotate(270deg);
+      }
+      100% {
+        transform: translate(0, 0) rotate(360deg);
+      }
+    }
+    
+    header {
+      background: var(--gradient-apple);
+      padding: 20px 16px 30px;
+      border-bottom: 1px solid var(--border);
+      position: relative;
+      overflow: hidden;
+      backdrop-filter: blur(10px);
+    }
+    
+    header::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 200px;
+      height: 200px;
+      background: var(--gradient-primary);
+      border-radius: 50%;
+      filter: blur(60px);
+      opacity: 0.15;
+      z-index: 0;
+    }
+    
+    .header-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      position: relative;
+      z-index: 1;
+    }
+    
+    .company-card {
+      background: var(--gradient-apple);
+      border-radius: 24px;
+      padding: 24px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      box-shadow: var(--shadow-apple);
+      color: white;
+      width: 100%;
+      margin-bottom: 16px;
+      border: 1px solid rgba(255,255,255,0.1);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .company-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: var(--gradient-primary);
+      opacity: 0.05;
+    }
+    
+    .company-logo {
+      width: 70px;
+      height: 70px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: var(--shadow-apple);
+      border: 2px solid rgba(255,255,255,0.15);
+      position: relative;
+      z-index: 1;
+    }
+    
+    .company-logo i {
+      font-size: 36px;
+      color: white;
+    }
+    
+    .company-text {
+      line-height: 1.3;
+      flex: 1;
+      position: relative;
+      z-index: 1;
+    }
+    
+    .company-name {
+      font-weight: 800;
+      font-size: 26px;
+      color: white;
+      margin-bottom: 6px;
+      letter-spacing: -0.5px;
+      background: linear-gradient(135deg, #FFFFFF, #E8E8E8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    
+    .company-desc {
+      font-size: 16px;
+      color: rgba(255,255,255,0.8);
+      font-weight: 500;
+    }
+    
+    .banner {
+      overflow: hidden;
+      border-radius: 24px;
+      margin-top: 8px;
+      position: relative;
+      box-shadow: var(--shadow-apple);
+      height: 200px;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+    
+    .banner img {
+      width: 100%;
+      border-radius: 24px;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+    
+    .banner:hover img {
+      transform: scale(1.03);
+    }
+    
+    .banner::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: var(--gradient-primary);
+      opacity: 0.1;
+      border-radius: 24px;
+    }
+    
+    main {
+      padding: 20px 16px;
+      max-width: 1000px;
+      margin: auto;
+      padding-bottom: 80px;
+    }
+    
+    .menu {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    
+    .menu button {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: var(--gradient-apple);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 20px;
+      padding: 20px 12px;
+      box-shadow: var(--shadow-apple);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .menu button::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: var(--gradient-primary);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    
+    .menu button:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--shadow-lg);
+      border-color: var(--primary);
+    }
+    
+    .menu button:hover::before {
+      opacity: 0.1;
+    }
+    
+    .menu button:hover .menu-icon {
+      transform: scale(1.1);
+      color: var(--primary);
+    }
+    
+    .menu button:hover span {
+      color: var(--primary);
+    }
+    
+    .menu-icon {
+      font-size: 28px;
+      margin-bottom: 10px;
+      color: var(--text);
+      position: relative;
+      z-index: 1;
+      transition: all 0.3s ease;
+    }
+    
+    .menu span {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+      position: relative;
+      z-index: 1;
+      transition: all 0.3s ease;
+    }
+    
+    .saldo {
+      background: var(--gradient-apple);
+      color: #fff;
+      border-radius: 24px;
+      padding: 24px;
+      margin-bottom: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: var(--shadow-apple);
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+    
+    .saldo::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -20%;
+      width: 150px;
+      height: 150px;
+      background: rgba(255,255,255,0.05);
+      border-radius: 50%;
+    }
+    
+    .saldo::after {
+      content: '';
+      position: absolute;
+      bottom: -60%;
+      left: -10%;
+      width: 120px;
+      height: 120px;
+      background: rgba(255,255,255,0.05);
+      border-radius: 50%;
+    }
+    
+    .saldo .label {
+      font-size: 16px;
+      opacity: 0.9;
+      font-weight: 500;
+      color: var(--text-muted);
+    }
+    
+    .saldo .amount {
+      font-size: 32px;
+      font-weight: 800;
+      margin-top: 6px;
+      letter-spacing: -0.5px;
+    }
+    
+    .saldo-icon {
+      font-size: 44px;
+      color: var(--primary);
+      position: relative;
+      z-index: 1;
+    }
+    
+    .produk h2 {
+      font-size: 22px;
+      font-weight: 800;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      letter-spacing: -0.5px;
+    }
+    
+    .produk h2::before {
+      content: '';
+      display: block;
+      width: 5px;
+      height: 24px;
+      background: var(--gradient-primary);
+      border-radius: 3px;
+    }
+    
+    .produk-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 20px;
+    }
+    
+    @media (max-width: 640px) {
+      .produk-list {
+        grid-template-columns: 1fr;
+      }
+    }
+    
+    .produk-item {
+      background: var(--gradient-apple);
+      border-radius: 20px;
+      padding: 20px;
+      border: 1px solid rgba(255,255,255,0.1);
+      box-shadow: var(--shadow-apple);
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .produk-item::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 5px;
+      background: var(--gradient-primary);
+    }
+    
+    .produk-item:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--shadow-lg);
+      border-color: var(--primary);
+    }
+    
+    .produk-item:nth-child(2)::before {
+      background: var(--gradient-secondary);
+    }
+    
+    .produk-item:nth-child(3)::before {
+      background: var(--gradient-accent);
+    }
+    
+    .produk-item:nth-child(4)::before {
+      background: var(--gradient-gold);
+    }
+    
+    .produk-item:nth-child(5)::before {
+      background: var(--gradient-purple);
+    }
+    
+    .produk-item:nth-child(6)::before {
+      background: var(--gradient-primary);
+    }
+    
+    .produk-item:nth-child(7)::before {
+      background: var(--gradient-secondary);
+    }
+    
+    .produk-item:nth-child(8)::before {
+      background: var(--gradient-accent);
+    }
+    
+    .produk-item:nth-child(9)::before {
+      background: var(--gradient-gold);
+    }
+    
+    .produk-logo {
+      width: 100%;
+      height: 160px;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 16px;
+      box-shadow: var(--shadow-apple);
+      overflow: hidden;
+      position: relative;
+      background: linear-gradient(135deg, #1d1d1f, #2d2d2f);
+    }
+    
+    .produk-logo img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      transition: transform 0.5s ease;
+      padding: 10px;
+    }
+    
+    .produk-item:hover .produk-logo img {
+      transform: scale(1.05);
+    }
+    
+    .produk-item .title {
+      font-weight: 800;
+      margin-bottom: 8px;
+      font-size: 18px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      letter-spacing: -0.5px;
+    }
+    
+    .produk-item .price {
+      font-size: 18px;
+      font-weight: 800;
+      background: var(--gradient-primary);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      display: inline-block;
+      margin-bottom: 8px;
+    }
+    
+    .produk-item:nth-child(2) .price {
+      background: var(--gradient-secondary);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    .produk-item:nth-child(3) .price {
+      background: var(--gradient-accent);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    .produk-item:nth-child(4) .price {
+      background: var(--gradient-gold);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    .produk-item:nth-child(5) .price {
+      background: var(--gradient-purple);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    .produk-item:nth-child(6) .price {
+      background: var(--gradient-primary);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    .produk-item:nth-child(7) .price {
+      background: var(--gradient-secondary);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    .produk-item:nth-child(8) .price {
+      background: var(--gradient-accent);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    .produk-item:nth-child(9) .price {
+      background: var(--gradient-gold);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    .produk-item .info {
+      font-size: 14px;
+      color: var(--text-muted);
+      margin: 6px 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .produk-item .info .value {
+      font-weight: 700;
+      color: var(--text);
+    }
+    
+    .profit-percentage {
+      font-size: 13px;
+      color: var(--accent);
+      margin: 8px 0;
+      text-align: center;
+      background: rgba(52, 199, 89, 0.1);
+      padding: 10px;
+      border-radius: 10px;
+      border-left: 3px solid var(--accent);
+      font-weight: 600;
+    }
+    
+    .profit-note {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin: 4px 0;
+      text-align: center;
+    }
+    
+    .divider {
+      height: 1px;
+      background: var(--border);
+      margin: 12px 0;
+      width: 100%;
+    }
+    
+    .produk-item button {
+      width: 100%;
+      padding: 16px;
+      border: none;
+      border-radius: 16px;
+      background: var(--gradient-primary);
+      color: #fff;
+      font-weight: 700;
+      margin-top: auto;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: var(--shadow-apple);
+      position: relative;
+      overflow: hidden;
+      font-size: 16px;
+      letter-spacing: -0.3px;
+    }
+    
+    .produk-item:nth-child(2) button {
+      background: var(--gradient-secondary);
+    }
+    
+    .produk-item:nth-child(3) button {
+      background: var(--gradient-accent);
+    }
+    
+    .produk-item:nth-child(4) button {
+      background: var(--gradient-gold);
+    }
+    
+    .produk-item:nth-child(5) button {
+      background: var(--gradient-purple);
+    }
+    
+    .produk-item:nth-child(6) button {
+      background: var(--gradient-primary);
+    }
+    
+    .produk-item:nth-child(7) button {
+      background: var(--gradient-secondary);
+    }
+    
+    .produk-item:nth-child(8) button {
+      background: var(--gradient-accent);
+    }
+    
+    .produk-item:nth-child(9) button {
+      background: var(--gradient-gold);
+    }
+    
+    .produk-item button:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-lg);
+    }
+    
+    .produk-item button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+    
+    /* Modal styles */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.8);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(10px);
+    }
+    
+    .modal-content {
+      background: var(--gradient-apple);
+      border-radius: 24px;
+      padding: 32px;
+      max-width: 420px;
+      width: 90%;
+      text-align: center;
+      box-shadow: var(--shadow-apple);
+      animation: modalAppear 0.4s ease;
+      border: 1px solid rgba(255,255,255,0.1);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .modal-content::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 5px;
+      background: var(--gradient-primary);
+    }
+    
+    @keyframes modalAppear {
+      from { opacity: 0; transform: scale(0.9) translateY(20px); }
+      to { opacity: 1; transform: scale(1) translateY(0); }
+    }
+    
+    .modal-icon {
+      font-size: 64px;
+      margin-bottom: 20px;
+      color: var(--primary);
+    }
+    
+    .modal.error .modal-icon {
+      color: var(--secondary);
+    }
+    
+    .modal.success .modal-icon {
+      color: var(--accent);
+    }
+    
+    .modal h3 {
+      font-size: 24px;
+      margin-bottom: 12px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+    }
+    
+    .modal p {
+      margin-bottom: 24px;
+      color: var(--text-muted);
+      font-size: 16px;
+      line-height: 1.6;
+    }
+    
+    .modal button {
+      background: var(--gradient-primary);
+      color: white;
+      border: none;
+      border-radius: 16px;
+      padding: 16px 32px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-size: 16px;
+      box-shadow: var(--shadow-apple);
+    }
+    
+    .modal button:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-lg);
+    }
+    
+    /* Bottom Navigation */
+    nav.bottom {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: var(--gradient-apple);
+      border-top: 1px solid rgba(255,255,255,0.1);
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      padding: 16px 0;
+      box-shadow: 0 -5px 20px rgba(0,0,0,0.5);
+      z-index: 100;
+      backdrop-filter: blur(10px);
+    }
+    
+    nav.bottom button {
+      background: none;
+      border: none;
+      text-align: center;
+      font-size: 13px;
+      color: var(--text-muted);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.3s ease;
+      padding: 10px 16px;
+      border-radius: 16px;
+      cursor: pointer;
+    }
+    
+    nav.bottom button.active {
+      color: var(--primary);
+      font-weight: 700;
+      background: rgba(0,122,255,0.15);
+    }
+    
+    .nav-icon {
+      font-size: 22px;
+      transition: transform 0.3s ease;
+    }
+    
+    nav.bottom button.active .nav-icon {
+      transform: scale(1.15);
+    }
+    
+    /* Loading Animation */
+    .loading-spinner {
+      display: inline-block;
+      width: 22px;
+      height: 22px;
+      border: 3px solid rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      border-top-color: #fff;
+      animation: spin 0.8s ease-in-out infinite;
+      margin-right: 10px;
+    }
+    
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Badge untuk produk yang sudah dibeli */
+    .purchased-badge {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      background: var(--gradient-accent);
+      color: white;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 700;
+      z-index: 10;
+      box-shadow: var(--shadow-sm);
+    }
+
+    /* Animasi untuk produk baru */
+    .new-badge {
+      position: absolute;
+      top: 15px;
+      left: 15px;
+      background: var(--gradient-secondary);
+      color: white;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 700;
+      z-index: 10;
+      box-shadow: var(--shadow-sm);
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-animation">
+    <div class="bg-circle"></div>
+    <div class="bg-circle"></div>
+    <div class="bg-circle"></div>
+  </div>
+
+  <header>
+    <div class="header-top">
+      <div class="company-card">
+        <div class="company-logo">
+          <i class="fa-brands fa-apple"></i>
+        </div>
+        <div class="company-text">
+          <div class="company-name">Apple Invest</div>
+          <div class="company-desc">Platform Investasi Premium - Cabang Utama</div>
+        </div>
+      </div>
+    </div>
+    <div class="banner">
+      <img src="https://images.unsplash.com/photo-1563986768609-322da13575f3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" alt="Apple Store Fifth Avenue">
+    </div>
+  </header>
+  
+  <main>
+    <div class="menu">
+      <button onclick="goPage('deposit.html')">
+        <i class="fas fa-wallet menu-icon"></i>
+        <span>Isi Ulang</span>
+      </button>
+      <button onclick="goPage('tarik.html')">
+        <i class="fas fa-money-bill-wave menu-icon"></i>
+        <span>Tarik Dana</span>
+      </button>
+      <button onclick="goPage('tim.html')">
+        <i class="fas fa-users menu-icon"></i>
+        <span>Team Saya</span>
+      </button>
+      <button onclick="goPage('online.html')">
+        <i class="fas fa-globe menu-icon"></i>
+        <span>Online</span>
+      </button>
+    </div>
+    
+    <div class="saldo">
+      <div>
+        <div class="label">Saldo Total Anda</div>
+        <div class="amount" id="saldoTotal">Rp 0</div>
+      </div>
+      <i class="fas fa-wallet saldo-icon"></i>
+    </div>
+
+    <section class="produk">
+      <h2>Produk Investasi Apple</h2>
+      <div class="produk-list" id="produkGrid"></div>
+    </section>
+  </main>
+  
+  <!-- Modal untuk pesan -->
+  <div class="modal" id="messageModal">
+    <div class="modal-content">
+      <i class="fas fa-check-circle modal-icon" id="modalIcon"></i>
+      <h3 id="modalTitle">Pembelian Berhasil</h3>
+      <p id="modalMessage">Paket berhasil dibeli.</p>
+      <button id="modalButton">Lanjutkan</button>
+    </div>
+  </div>
+  
+  <nav class="bottom">
+    <button class="active" onclick="goPage('dashboard.html')">
+      <i class="fas fa-home nav-icon"></i>
+      <span>Beranda</span>
+    </button>
+    <button onclick="goPage('investasi.html')">
+      <i class="fas fa-chart-line nav-icon"></i>
+      <span>Investasi</span>
+    </button>
+    <button onclick="goPage('undang.html')">
+      <i class="fas fa-share-alt nav-icon"></i>
+      <span>Undang</span>
+    </button>
+    <button onclick="goPage('profil.html')">
+      <i class="fas fa-user nav-icon"></i>
+      <span>Profil</span>
+    </button>
+  </nav>
+  
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+    import { getDatabase, ref, get, update, set, onValue } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyAuJSxpcFZ1QI-dEsEnx2qSqlb0wsvs6Mc",
+      authDomain: "lginvest-776cf.firebaseapp.com",
+      databaseURL: "https://lginvest-776cf-default-rtdb.firebaseio.com",
+      projectId: "lginvest-776cf",
+      storageBucket: "lginvest-776cf.firebasestorage.app",
+      messagingSenderId: "831934282072",
+      appId: "1:831934282072:web:6a8b7a5bcba5d4d1264d2d",
+      measurementId: "G-265YF9DYCF"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+    // Data produk dengan urutan harga dari termurah ke termahal
+    const produkList = [
+      { 
+        kode: 'A', 
+        harga: 50000, 
+        persentase: 10.0,
+        masaAktif: 95, 
+        image: 'https://i.ibb.co/3sLz6YV/iphone6.png',
+        name: 'iPhone 6'
+      },
+      { 
+        kode: 'B', 
+        harga: 125000, 
+        persentase: 10.5,
+        masaAktif: 95, 
+        image: 'https://i.ibb.co/6W9b2wX/iphone11.png',
+        name: 'iPhone 11'
+      },
+      { 
+        kode: 'C', 
+        harga: 250000, 
+        persentase: 11.0,
+        masaAktif: 95, 
+        image: 'https://i.ibb.co/1L8yJ1F/iphone12.png',
+        name: 'iPhone 12'
+      },
+      { 
+        kode: 'D', 
+        harga: 350000, 
+        persentase: 11.5,
+        masaAktif: 95, 
+        image: 'https://i.ibb.co/2K4vXqR/iphone13.png',
+        name: 'iPhone 13'
+      },
+      { 
+        kode: 'E', 
+        harga: 500000, 
+        persentase: 12.0,
+        masaAktif: 95, 
+        image: 'https://i.ibb.co/3h1L7JN/iphone14.png',
+        name: 'iPhone 14'
+      },
+      { 
+        kode: 'F', 
+        harga: 750000, 
+        persentase: 12.5,
+        masaAktif: 95, 
+        image: 'https://i.ibb.co/9r9jWv0/iphone15.png',
+        name: 'iPhone 15 Pro'
+      },
+      { 
+        kode: 'G', 
+        harga: 845000, 
+        persentase: 13.0,
+        masaAktif: 95, 
+        image: 'https://i.ibb.co/3T9Px5r/ipadair.png',
+        name: 'iPad Air'
+      },
+      { 
+        kode: 'H', 
+        harga: 970000, 
+        persentase: 13.5,
+        masaAktif: 95, 
+        image: 'https://i.ibb.co/Lk2N8Xw/macbookair.png',
+        name: 'MacBook Air'
+      },
+      { 
+        kode: 'I', 
+        harga: 1000000, 
+        persentase: 14.0,
+        masaAktif: 95, 
+        image: 'https://i.ibb.co/8Xy7qKt/macbookpro.png',
+        name: 'MacBook Pro'
+      }
+    ];
+
+    // Fungsi untuk menghitung profit perhari berdasarkan persentase
+    function hitungProfitPerhari(harga, persentase) {
+      return Math.round(harga * (persentase / 100));
+    }
+
+    function formatRupiah(n) {
+      return 'Rp ' + n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+    }
+
+    function generateProduk() {
+      const grid = document.getElementById('produkGrid');
+      grid.innerHTML = '';
+      
+      produkList.forEach((produk, i) => {
+        const profitPerhari = hitungProfitPerhari(produk.harga, produk.persentase);
+        const totalProfit = profitPerhari * produk.masaAktif;
+        
+        const div = document.createElement('div');
+        div.className = 'produk-item';
+        div.innerHTML = `
+          <div class="produk-logo">
+            <img src="${produk.image}" alt="${produk.name}" onerror="this.src='https://via.placeholder.com/300x200/1C1C1E/FFFFFF?text=Apple+${produk.name.split(' ').join('+')}'">
+          </div>
+          <div class='title'>${produk.name}</div>
+          <div class='price'>${formatRupiah(produk.harga)}</div>
+          <div class="profit-percentage">Profit ${produk.persentase}% per hari</div>
+          <div class="profit-note">Profit masuk setiap hari ke dompet akun</div>
+          <div class="divider"></div>
+          <div class='info'>
+            <span>Profit Harian:</span>
+            <span class="value">${formatRupiah(profitPerhari)}</span>
+          </div>
+          <div class='info'>
+            <span>Masa Aktif:</span>
+            <span class="value">${produk.masaAktif} Hari</span>
+          </div>
+          <div class='info'>
+            <span>Total Profit:</span>
+            <span class="value">${formatRupiah(totalProfit)}</span>
+          </div>
+          <div class="divider"></div>
+          <button onclick="buyProduct('${produk.kode}', ${produk.harga}, '${produk.name}')" id="btn-${produk.kode}">Beli Sekarang</button>`;
+        grid.appendChild(div);
+      });
+    }
+
+    // Fungsi untuk memuat saldo dengan real-time updates
+    function loadSaldo() {
+      const nohp = localStorage.getItem('nohp');
+      if (!nohp) {
+        document.getElementById('saldoTotal').textContent = formatRupiah(0);
+        return;
+      }
+      
+      const refUser = ref(db, 'users/' + nohp);
+      
+      // Gunakan onValue untuk real-time updates
+      onValue(refUser, (snapshot) => {
+        if (snapshot.exists()) {
+          const data = snapshot.val();
+          document.getElementById('saldoTotal').textContent = formatRupiah(data.saldo || 0);
+        } else {
+          document.getElementById('saldoTotal').textContent = formatRupiah(0);
+        }
+      }, {
+        onlyOnce: false // Listen for changes, not just once
+      });
+    }
+
+    // Variabel untuk mencegah double click
+    let isProcessing = false;
+    let purchasedProducts = new Set();
+
+    // Fungsi untuk menampilkan modal
+    function showModal(title, message, type = 'success') {
+      const modal = document.getElementById('messageModal');
+      const modalTitle = document.getElementById('modalTitle');
+      const modalMessage = document.getElementById('modalMessage');
+      const modalIcon = document.getElementById('modalIcon');
+      const modalButton = document.getElementById('modalButton');
+      
+      modalTitle.textContent = title;
+      modalMessage.textContent = message;
+      
+      // Set icon based on type
+      if (type === 'success') {
+        modalIcon.className = 'fas fa-check-circle modal-icon';
+        modal.className = 'modal success';
+        modalButton.textContent = 'Lanjutkan';
+      } else {
+        modalIcon.className = 'fas fa-exclamation-circle modal-icon';
+        modal.className = 'modal error';
+        modalButton.textContent = 'Tutup';
+      }
+      
+      // Show modal
+      modal.style.display = 'flex';
+      
+      // Auto hide after 2 seconds for success, manual close for errors
+      if (type === 'success') {
+        setTimeout(() => {
+          modal.style.display = 'none';
+        }, 2000);
+      }
+      
+      modalButton.onclick = function() {
+        modal.style.display = 'none';
+      };
+      
+      // Tambahkan event listener untuk klik di luar modal
+      modal.addEventListener('click', function(e) {
+        if (e.target === modal) {
+          modal.style.display = 'none';
+        }
+      });
+    }
+
+    // Fungsi untuk membeli produk
+    async function buyProduct(kode, harga, namaProduk) {
+      // Cegah double click
+      if (isProcessing) {
+        showModal('Tunggu Sebentar', 'Sedang memproses pembelian sebelumnya', 'error');
+        return;
+      }
+
+      // Cek apakah produk sudah dibeli
+      if (purchasedProducts.has(kode)) {
+        showModal('Pembelian Gagal', 'Anda sudah membeli produk ini sebelumnya', 'error');
+        return;
+      }
+      
+      isProcessing = true;
+      
+      const nohp = localStorage.getItem('nohp');
+      if (!nohp) {
+        showModal('Error', 'Anda harus login terlebih dahulu', 'error');
+        isProcessing = false;
+        return;
+      }
+
+      // Tampilkan loading state
+      const button = document.getElementById(`btn-${kode}`);
+      const originalText = button.innerHTML;
+      button.innerHTML = '<div class="loading-spinner"></div> Memproses...';
+      button.disabled = true;
+
+      // Cek saldo user
+      const refUser = ref(db, 'users/' + nohp);
+      const snap = await get(refUser);
+      
+      if (!snap.exists()) {
+        showModal('Error', 'Data user tidak ditemukan', 'error');
+        button.innerHTML = originalText;
+        button.disabled = false;
+        isProcessing = false;
+        return;
+      }
+
+      const userData = snap.val();
+      const saldoSekarang = userData.saldo || 0;
+
+      if (saldoSekarang < harga) {
+        showModal('Saldo Tidak Cukup', 'SALDO AKUN TIDAK CUKUP UNTUK MEMBELI PAKET INI', 'error');
+        button.innerHTML = originalText;
+        button.disabled = false;
+        isProcessing = false;
+        return;
+      }
+
+      // Saldo cukup, lakukan pembelian
+      try {
+        // Kurangi saldo user
+        const updates = {};
+        updates['/users/' + nohp + '/saldo'] = saldoSekarang - harga;
+        
+        // Catat pembelian
+        updates['/purchases/' + nohp + '/' + kode] = {
+          tanggal: new Date().toISOString(),
+          harga: harga,
+          nama: namaProduk,
+          status: 'active'
+        };
+
+        // Berikan komisi ke upline jika ini pembelian pertama
+        if (!userData.purchases || !userData.purchases[kode]) {
+          // Logika komisi untuk upline
+          if (userData.upline) {
+            const refUpline1 = ref(db, 'users/' + userData.upline);
+            const snapUpline1 = await get(refUpline1);
+            
+            if (snapUpline1.exists()) {
+              const upline1Data = snapUpline1.val();
+              const komisi1 = Math.round(harga * 0.25); // 25% untuk level 1
+              updates['/users/' + userData.upline + '/saldo'] = (upline1Data.saldo || 0) + komisi1;
+              
+              // Catat komisi untuk level 1
+              updates['/commissions/' + userData.upline + '/' + Date.now()] = {
+                dari: nohp,
+                paket: kode,
+                nama: namaProduk,
+                jumlah: komisi1,
+                level: 1,
+                tanggal: new Date().toISOString()
+              };
+
+              // Cek upline level 2
+              if (upline1Data.upline) {
+                const refUpline2 = ref(db, 'users/' + upline1Data.upline);
+                const snapUpline2 = await get(refUpline2);
+                
+                if (snapUpline2.exists()) {
+                  const upline2Data = snapUpline2.val();
+                  const komisi2 = Math.round(harga * 0.02); // 2% untuk level 2
+                  updates['/users/' + upline1Data.upline + '/saldo'] = (upline2Data.saldo || 0) + komisi2;
+                  
+                  // Catat komisi untuk level 2
+                  updates['/commissions/' + upline1Data.upline + '/' + Date.now()] = {
+                    dari: nohp,
+                    paket: kode,
+                    nama: namaProduk,
+                    jumlah: komisi2,
+                    level: 2,
+                    tanggal: new Date().toISOString()
+                  };
+
+                  // Cek upline level 3
+                  if (upline2Data.upline) {
+                    const refUpline3 = ref(db, 'users/' + upline2Data.upline);
+                    const snapUpline3 = await get(refUpline3);
+                    
+                    if (snapUpline3.exists()) {
+                      const upline3Data = snapUpline3.val();
+                      const komisi3 = Math.round(harga * 0.01); // 1% untuk level 3
+                      updates['/users/' + upline2Data.upline + '/saldo'] = (upline3Data.saldo || 0) + komisi3;
+                      
+                      // Catat komisi untuk level 3
+                      updates['/commissions/' + upline2Data.upline + '/' + Date.now()] = {
+                        dari: nohp,
+                        paket: kode,
+                        nama: namaProduk,
+                        jumlah: komisi3,
+                        level: 3,
+                        tanggal: new Date().toISOString()
+                      };
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+
+        // Tandai bahwa user sudah pernah membeli paket ini
+        updates['/users/' + nohp + '/purchases/' + kode] = true;
+
+        // Eksekusi semua update
+        await update(ref(db), updates);
+
+        // Tandai produk sebagai sudah dibeli
+        purchasedProducts.add(kode);
+
+        // Tampilkan pesan sukses
+        showModal('Pembelian Berhasil', `PAKET ${namaProduk.toUpperCase()} BERHASIL DIBELI!\n\nProfit akan masuk setiap hari ke dompet akun Anda.`, 'success');
+        
+        // Update button setelah sukses
+        setTimeout(() => {
+          button.innerHTML = '<i class="fas fa-check"></i> Sudah Dibeli';
+          button.disabled = true;
+          button.style.background = 'var(--gradient-accent)';
+          isProcessing = false;
+        }, 2000);
+        
+      } catch (error) {
+        console.error('Error saat pembelian:', error);
+        showModal('Error', 'Terjadi kesalahan saat memproses pembelian', 'error');
+        
+        // Reset button setelah error
+        button.innerHTML = originalText;
+        button.disabled = false;
+        isProcessing = false;
+      }
+    }
+
+    // Fungsi navigasi langsung tanpa pemberitahuan
+    function goPage(page) {
+      window.location.href = page;
+    }
+
+    window.goPage = goPage;
+    window.buyProduct = buyProduct;
+
+    document.addEventListener('DOMContentLoaded', () => {
+      // Cek apakah user sudah login
+      if (!localStorage.getItem('nohp')) {
+        window.location.href = 'index.html';
+        return;
+      }
+      
+      generateProduk();
+      loadSaldo(); // Load saldo dengan real-time updates
+    });
+  </script>
+</body>
+</html>
